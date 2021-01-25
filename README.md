@@ -1,4 +1,4 @@
-# __Welcome to This Repository!__
+:bow: # __Welcome to This Repository!__ :bow:
 
  __This is essentially an online folder that stores your work and you can [share](https://memegenerator.net/instance/63839333/spongebob-rainbow-thanks-for-sharing) it with others. Here are some ways to navigate through this repository:__
 
@@ -23,6 +23,6 @@ __Those are some instructions to navigate through this repository. Well folks, t
   
  -Khoa
   
-  __*To spice things up a little, here's something I find funny. ( I have a strange sense of humor)*__
+  __*To spice things up a little, here's something I find funny. ( I have a strange sense of humor)*__ :trollface:
 
 ![](https://img.ifunny.co/images/3e72591f482e16174e16cffab992b8f91bf2e56e74b1abc5e3f54d43bf2eb9aa_1.jpg)
