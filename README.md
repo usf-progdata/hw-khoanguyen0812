@@ -19,7 +19,7 @@ __Those are some instructions to navigate through this repository. Well folks, t
 
 #### Just kidding. Time to introduce myself.
 
-> Hello, my name is Khoa Nguyen. I am a student at USF currently taking Pgoramming with Data and working on this amazing file!
+> Hello, my name is Khoa Nguyen. I am a student at USF currently taking Programming with Data and working on this amazing file!
   
  -Khoa
   
