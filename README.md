@@ -27,11 +27,7 @@ __Those are some instructions to navigate through this repository. Well folks, t
        ------------------------
        ![](http://images.wikia.com/spongebob/images/e/ea/15_minutes_later.jpg)
        ------------------------
-        ![](https://i.ytimg.com/vi/Lb7OWEmEK_U/hqdefault.jpg)|![Me literally everytime we go over the quiz session and jump right into a bechmark test first day](http://blueseatblogs.com/wp-content/uploads/2013/01/panic-wallpaper-6-743320-1024x640.jpg)
-       ------------------------
-       ![](https://imgur.com/gallery/3nDhuXq)
+       ![](https://i.ytimg.com/vi/Lb7OWEmEK_U/hqdefault.jpg)|![Me literally everytime we go over the quiz session and jump right into a bechmark test first day](http://blueseatblogs.com/wp-content/uploads/2013/01/panic-wallpaper-6-743320-1024x640.jpg)
        -------------------------
-       ![](https://www.pinterest.com/pin/799107527620013757/)
-       -------------------------
-       ![](https://media.sketchfab.com/models/0a0d3d35a5d24b52b8cac2c006215425/thumbnails/9f241fc3e2664a5d9ed8d17918bc3e41/7532821624224d0ca7745204e904dce3.jpeg)
+      ![](https://media.sketchfab.com/models/0a0d3d35a5d24b52b8cac2c006215425/thumbnails/9f241fc3e2664a5d9ed8d17918bc3e41/7532821624224d0ca7745204e904dce3.jpeg)
        
