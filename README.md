@@ -19,15 +19,4 @@ __Those are some instructions to navigate through this repository. Well folks, t
 
 #### Just kidding. Time to introduce myself.
 - Hello, my name is Khoa Nguyen. I am a student at USF currently taking Pgoramming with Data and working on this amazing file!
-    - __*To spice things up a little here's a comic story I made for fun!*__
-    
-        __*Me in class an be like....*__
-       ------------------------
-       ![](https://i.imgflip.com/3876oo.jpg)
-       ------------------------
-       ![](http://images.wikia.com/spongebob/images/e/ea/15_minutes_later.jpg)
-       ------------------------
-       ![](https://i.ytimg.com/vi/Lb7OWEmEK_U/hqdefault.jpg)|![Me literally everytime we go over the quiz session and jump right into a bechmark test first day](http://blueseatblogs.com/wp-content/uploads/2013/01/panic-wallpaper-6-743320-1024x640.jpg)
-       -------------------------
-      ![](https://media.sketchfab.com/models/0a0d3d35a5d24b52b8cac2c006215425/thumbnails/9f241fc3e2664a5d9ed8d17918bc3e41/7532821624224d0ca7745204e904dce3.jpeg)
-       
+    - __*To spice things up a little here's a comic story I find funny! ( I have a strange sense of humor)__
