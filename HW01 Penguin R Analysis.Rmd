@@ -15,6 +15,7 @@ The mean of the body mass for the penguins is around 4,202 grams counting both t
 
 ```{r summary}
 library(palmerpenguins)
+str(penguins)
 summary(penguins)
 summary(penguins$species)
 nrow(penguins)
