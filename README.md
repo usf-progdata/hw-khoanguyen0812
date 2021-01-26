@@ -6,10 +6,6 @@
 - You can edit the file by clicking on the pen icon located on the right-hand side.
 - You can request folders to be *shared* by clicking on "Pull Request" icon and add people in.
 
-
-
-
-
 __Those are some instructions to navigate through this repository. Well folks, that's it!__
 
 
@@ -25,4 +21,4 @@ __Those are some instructions to navigate through this repository. Well folks, t
   
   __*To spice things up a little, here's something I find funny. ( I have a strange sense of humor)*__ :trollface:
 
-![](https://img.ifunny.co/images/3e72591f482e16174e16cffab992b8f91bf2e56e74b1abc5e3f54d43bf2eb9aa_1.jpg)
+"<img src="https://img.ifunny.co/images/3e72591f482e16174e16cffab992b8f91bf2e56e74b1abc5e3f54d43bf2eb9aa_1.jpg" width="300" height="300" />"
