@@ -46,7 +46,6 @@ The data set for body mass of the penguins seems to be right-skewed with the plo
 This analysis of the graph is accounting for every species of penguins put into one analysis rather than smaller chunk of analysis focusing on only one specific species of penguins.
 
 
-
 ```{r}
 ggplot(penguins, aes(body_mass_g)) +
   geom_density()
