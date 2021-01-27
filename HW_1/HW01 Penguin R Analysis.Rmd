@@ -1,0 +1,73 @@
+---
+title: "HW01"
+author: "Khoa Nguyen"
+date: "1/25/2021"
+output: 
+    html_document: default
+    github_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(palmerpenguins)
+library(ggplot2)
+library(tidyverse)
+library(scales)
+x <- penguins$body_mass_g
+```
+
+## Summary
+
+The mean of the body mass for the penguins is around 4,202 grams counting both the male and female penguins with the lowest body mass being 2,700g and the heaviest being 4,202g. This information is slightly bias as there are more Adelie penguins more than the other two which can skew the data.
+
+## Quick look at the data.
+
+```{r quicklook}
+str(penguins)
+```
+## Summary Table of the Data.
+``` {r}
+summary(penguins)
+```
+
+## Number of penguins per species.
+```{r}
+summary(penguins$species)
+```
+## Number of data entry.
+```{r}
+nrow(penguins)
+```
+
+## Penguin Body Mass Plot
+
+The data set for body mass of the penguins seems to be right-skewed with the plot graph being slightly confusing to analyze.
+
+This analysis of the graph is accounting for every species of penguins put into one analysis rather than smaller chunk of analysis focusing on only one specific species of penguins.
+
+
+
+```{r}
+ggplot(penguins, aes(body_mass_g)) +
+  geom_density()
+  
+```
+
+## Penguin's Body Mass in Species
+
+Gentoo penguin species seems to have the highest mean of body weight when compared to both Chinstrap and Adelie
+
+```{r}
+echo={FALSE}
+ggplot(penguins, aes(species, body_mass_g)) +
+  geom_boxplot()
+eval = FALSE
+```
+## Histogram plot for penguins' body mass.
+
+Variable *__x__* in this case represents penguins' body mass for all species
+
+```{r}
+ggplot(penguins, aes(x)) +
+  geom_histogram(bins = 50)
+```
