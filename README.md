@@ -1,6 +1,6 @@
 # :bow: __Welcome to This Repository!__ :bow:
 
- __This repository is my first attempt at coding and saving my work. Here are some ways to navigate through this repository [safely](https://www.askideas.com/media/48/Safety-First-Funny-Safety-Meme-Photo.jpg):__
+ __This repository is my first attempt at coding saving, and posting my work. Here are some ways to navigate through this repository [safely](https://www.askideas.com/media/48/Safety-First-Funny-Safety-Meme-Photo.jpg):__
 
 - Choose a file of your liking and click on it to view its content.
 - You can edit the file by clicking on the pen icon located on the right-hand side.
