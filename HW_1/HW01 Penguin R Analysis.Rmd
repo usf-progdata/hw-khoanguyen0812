@@ -3,8 +3,8 @@ title: "HW01"
 author: "Khoa Nguyen"
 date: "1/25/2021"
 output: 
-    github_document: default
     html_document: default
+    github_document: default
 ---
 
 ```{r setup, include=FALSE}
