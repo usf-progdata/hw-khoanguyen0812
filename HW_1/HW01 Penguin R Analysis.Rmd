@@ -10,10 +10,10 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(palmerpenguins)
-library(ggplot2)
+library(ggplot2) # library(tidyverse) also loads ggplot2, so you don't need to include both
 library(tidyverse)
 library(scales)
-x <- penguins$body_mass_g
+x <- penguins$body_mass_g # <!-- for readability, it's best to use more descriptive variable names
 ```
 
 ## Summary

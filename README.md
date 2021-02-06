@@ -1,3 +1,7 @@
+<!-- Nicely done! Just a few comments. -->
+
+<!-- Please delete branches after you merge the pull request back into master. -->
+
 # :bow: __Welcome to This Repository!__ :bow:
 
  __This repository is my first attempt at coding saving, and posting my work. Here are some ways to navigate through this repository [safely](https://www.askideas.com/media/48/Safety-First-Funny-Safety-Meme-Photo.jpg):__
@@ -22,3 +26,9 @@ __Those are some instructions to navigate through this repository. Well folks, t
   __*To spice things up a little, here's something I find funny. ( I have a strange sense of humor)*__ :trollface:
 
 "<img src="https://img.ifunny.co/images/3e72591f482e16174e16cffab992b8f91bf2e56e74b1abc5e3f54d43bf2eb9aa_1.jpg" width="300" height="300" />"
+
+<!-- Unless you want to control the height/width, you can more easily specify images like follows:
+
+![alt text](/https://img.ifunny.co/images/3e72591f482e16174e16cffab992b8f91bf2e56e74b1abc5e3f54d43bf2eb9aa_1.jpg "title")
+
+-->
