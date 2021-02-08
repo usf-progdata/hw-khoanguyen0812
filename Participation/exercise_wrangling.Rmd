@@ -30,7 +30,7 @@ library(dplyr)
 the `gapminder` data, in that order.
 
 ```{r}
-select(gapminder, c("year", "lifeExp", "country"))
+select(gapminder, year, lifeExp, country)
 ```
 
 2. Select all variables, from `country` to `lifeExp`.
@@ -109,7 +109,7 @@ gapminder %>%
 
 ```{r}
 gapminder %>% 
-  filter(continent == "Asia" & pop > 100000000)
+  filter( pop > 100000000)
 ```
 
 2. Only keep data _from Asia_ with population greater than 100 million.
@@ -154,7 +154,7 @@ Try the same thing, but with `transmute` (drops all other variables).
 
 ```{r}
 gapminder %>%
-  transmute(FILL_THIS_IN)
+  transmute(grossGDP = gdpPercap*pop)
 ```
 
 The `if_else` function is useful for changing certain elements in a data frame.
