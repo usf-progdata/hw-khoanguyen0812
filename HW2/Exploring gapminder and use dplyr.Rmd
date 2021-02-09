@@ -1,0 +1,35 @@
+---
+title: "HW2"
+author: "Khoa Nguyen"
+date: "2/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## ackage Data Used.
+```{r}
+library(gapminder)
+library(tidyverse)
+library(dplyr)
+```
+
+## 1.1
+
+
+```{r}
+gapminder %>% 
+  filter(country %in% c("China", "France", "Japan") & year == "1970":"1979")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
