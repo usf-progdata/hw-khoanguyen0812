@@ -68,6 +68,28 @@ gapminder %>%
 ```{r}
 library(palmerpenguins)
 palmerpenguins::penguins %>% 
+   summarise(average_body_mass = mean(body_mass_g, na.rm = TRUE),
+             average_flipper_length = mean(flipper_length_mm, na.rm = TRUE))
+```
+```{r}
+palmerpenguins::penguins %>% 
+  summarize( 
+    total_penguins = n(),
+    average_body_mass = mean(body_mass_g, na.rm = TRUE),
+    sd_of_body_mass = sd(body_mass_g, na.rm = TRUE),
+    average_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
+    sd_of_flipper_length = sd(flipper_length_mm, na.rm = TRUE))
+```
+
+## 2.2
+
+```{r}
+palmerpenguins::penguins %>% 
   group_by(species) %>% 
-  summarise(across(c(body_mass_g:flipper_length_mm), mean, na.rm = TRUE)) 
+  summarize( 
+    total_penguins = n(),
+    average_body_mass = mean(body_mass_g, na.rm = TRUE),
+    sd_of_body_mass = sd(body_mass_g, na.rm = TRUE),
+    average_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
+    sd_of_flipper_length = sd(flipper_length_mm, na.rm = TRUE))
 ```
