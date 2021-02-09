@@ -66,8 +66,8 @@ gapminder %>%
 ## 2.1
 
 ```{r}
+library(palmerpenguins)
 palmerpenguins::penguins %>% 
-  group_by(species)
-  summarize(mu = mean(penguins$bill_length_mm),
-            sig = sd(penguins$bill_length_mm))
+  group_by(species) %>% 
+  summarise(across(c(body_mass_g:flipper_length_mm), mean, na.rm = TRUE)) 
 ```
