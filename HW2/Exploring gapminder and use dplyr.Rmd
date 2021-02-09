@@ -93,3 +93,10 @@ palmerpenguins::penguins %>%
     average_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
     sd_of_flipper_length = sd(flipper_length_mm, na.rm = TRUE))
 ```
+
+```{r}
+palmerpenguins::penguins %>% 
+  ggplot() +
+  aes(x = species, y = body_mass_g) +
+  geom_point(fill = "black", color = "red", alpha = .5, size = 3)
+```
