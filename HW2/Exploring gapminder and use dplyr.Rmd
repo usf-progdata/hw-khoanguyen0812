@@ -16,6 +16,8 @@ library(dplyr)
 library(ggplot2)
 ```
 
+# Excerise 1
+
 ## 1.1
 
 
@@ -59,3 +61,13 @@ gapminder %>%
   geom_point(fill = "red", color = "black", alpha = .5, size = 3)
 ```
 
+# Excercise 2
+
+## 2.1
+
+```{r}
+palmerpenguins::penguins %>% 
+  group_by(species)
+  summarize(mu = mean(penguins$bill_length_mm),
+            sig = sd(penguins$bill_length_mm))
+```
