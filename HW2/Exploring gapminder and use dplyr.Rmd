@@ -20,16 +20,16 @@ library(dplyr)
 
 
 ```{r}
-gapminder %>% 
-  filter(country %in% c("China", "France", "Japan") & year == "1970":"1979")
+filter(gapminder, country %in% c("China", "Japan", "France") & year =="1970":"1979")
 ```
 
-## Including Plots
+## 1.2
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+gapminder %>% 
+  filter(country %in% c("China", "France", "Japan") & year == "1970":"1979") %>% 
+  select(country, gdpPercap)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
