@@ -57,7 +57,8 @@ gapminder %>%
   filter(country == "Canada") %>% 
   ggplot() +
   aes(x= lifeExp, y= gdpPercap) +
-  geom_point(fill = "red", color = "black", alpha = .5, size = 3)
+  geom_point(fill = "red", color = "red", alpha = .5, size = 3) +
+  scale_y_continuous(trans = "log10")
 ```
 
 # Excercise 2
@@ -67,17 +68,11 @@ gapminder %>%
 ```{r}
 library(palmerpenguins)
 palmerpenguins::penguins %>% 
-   summarise(average_body_mass = mean(body_mass_g, na.rm = TRUE),
-             average_flipper_length = mean(flipper_length_mm, na.rm = TRUE))
-```
-```{r}
-palmerpenguins::penguins %>% 
-  summarize( 
-    total_penguins = n(),
-    average_body_mass = mean(body_mass_g, na.rm = TRUE),
-    sd_of_body_mass = sd(body_mass_g, na.rm = TRUE),
-    average_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
-    sd_of_flipper_length = sd(flipper_length_mm, na.rm = TRUE))
+  summarize(across(c(body_mass_g, flipper_length_mm),
+  list(mean = ~ mean(.x, na.rm = TRUE), 
+       sd = ~ sd(.x, na.rm = TRUE),
+       min = ~ min(.x, na.rm = TRUE),
+       max = ~ max(.x, na.rm = TRUE)))) 
 ```
 
 ## 2.2
@@ -93,12 +88,7 @@ palmerpenguins::penguins %>%
     sd_of_flipper_length = sd(flipper_length_mm, na.rm = TRUE))
 ```
 
-```{r}
-palmerpenguins::penguins %>% 
-  group_by(species) %>% 
-  summarize(across(c(body_mass_g, flipper_length_mm),
-  list(mean = ~ mean(.x, na.rm = TRUE), sd = ~ sd(.x, na.rm = TRUE)))) 
-```
+
 
 ```{r}
 palmerpenguins::penguins %>% 
