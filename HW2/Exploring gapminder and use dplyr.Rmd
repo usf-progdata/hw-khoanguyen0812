@@ -45,7 +45,7 @@ gapminder %>%
 
 ```{r}
 gapminder %>% 
-  select(country, gdpPxercap) %>%
+  select(country, gdpPercap) %>%
   group_by(country) %>%
   filter(gdpPercap == max(gdpPercap))
 ```
