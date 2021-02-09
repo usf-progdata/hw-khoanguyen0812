@@ -97,6 +97,9 @@ palmerpenguins::penguins %>%
 ```{r}
 palmerpenguins::penguins %>% 
   ggplot() +
+  geom_jitter(height = 1.5, 
+              alpha = .5,
+              size = 1.0) +
   aes(x = species, y = body_mass_g) +
   geom_point(fill = "black", color = "red", alpha = .5, size = 3)
 ```
