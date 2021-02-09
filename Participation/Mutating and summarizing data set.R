@@ -48,3 +48,15 @@ bfiscore %>%
                 min = ~ min(.x, na.rm = TRUE),
                 max = ~ max(.x, na.rm = TRUE))))
 
+# 1.5
+
+bfiscore %>% 
+  group_by(education) %>% 
+  summarize(
+    across(Agreeable_tot:Open_tot,
+           list(mean = ~ mean(.x, na.rm = TRUE),
+                sd = ~ sd(.x, na.rm = TRUE),
+                min = ~ min(.x, na.rm = TRUE),
+                max = ~ max(.x, na.rm = TRUE))))
+
+    
