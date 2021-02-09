@@ -217,7 +217,7 @@ Use `psych::bfi` and mean center the personality scales.
 ```{r}
 psych::bfi %>%
   as_tibble(rownames = ".id") %>% 
-  FILL_THIS_IN(FILL_THIS_IN)
+  mutate(across(where (is.numeric), ~ .x - mean(.x, na.rm = TRUE)))
 ```
 
 
