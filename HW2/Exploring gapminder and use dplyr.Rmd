@@ -45,10 +45,9 @@ gapminder %>%
 
 ```{r}
 gapminder %>% 
-  select(country, gdpPercap) %>%
-  mutate(gdpPercapMax = gdpPercap) %>% 
-  group_by(country) %>% 
-  filter(gdpPercapMax == max(gdpPercapMax))
+  select(country, gdpPxercap) %>%
+  group_by(country) %>%
+  filter(gdpPercap == max(gdpPercap))
 ```
   
 ## 1.5
@@ -92,6 +91,13 @@ palmerpenguins::penguins %>%
     sd_of_body_mass = sd(body_mass_g, na.rm = TRUE),
     average_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
     sd_of_flipper_length = sd(flipper_length_mm, na.rm = TRUE))
+```
+
+```{r}
+palmerpenguins::penguins %>% 
+  group_by(species) %>% 
+  summarize(across(c(body_mass_g, flipper_length_mm),
+  list(mean = ~ mean(.x, na.rm = TRUE), sd = ~ sd(.x, na.rm = TRUE)))) 
 ```
 
 ```{r}
