@@ -44,7 +44,8 @@ Make a new variable in gapminder for the change in life expectancy from the prev
 
 ```{r}
 gapminder %>% 
-  mutate(dropLifeExp <- lag(lifeExp))
+  mutate(dropLifeExp = lag(lifeExp)) %>% 
+  filter(dropLifeExp <= lifeExp)
 ```
 
 ## 1.4
