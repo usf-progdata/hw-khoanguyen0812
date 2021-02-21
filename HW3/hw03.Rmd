@@ -26,7 +26,7 @@ reversed <- dictionary %>%
 
 ```{r}
 green_data %>% 
-mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response")) %>% 
+mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response", .default = "Unknown")) %>% 
   select(id, student)
 ```
 
@@ -50,7 +50,7 @@ open_ex <- c("open7", "open8", "open9", "open10")
 
 ```{r}
 green_data %>% 
-  mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .default  = "No_Response")) %>% 
+  mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response", .default = "Unknown")) %>% 
   rowwise() %>%
   mutate(green_tot = mean(c_across(green1:green5 & !green2), na.rm = TRUE)) %>%
   mutate(comp_tot = mean(c_across(comp1:comp10 & !comp_ex), na.rm = TRUE)) %>% 
@@ -61,7 +61,7 @@ green_data %>%
 
 ```{r}
 items_data <- green_data %>% 
-  mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .default = "No_Response")) %>% 
+  mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response", .default = "Unknown")) %>% 
   rowwise() %>%
   mutate(green_tot = mean(c_across(green1:green5 & !green2), na.rm = TRUE)) %>%
   mutate(comp_tot = mean(c_across(comp1:comp10 & !comp_ex), na.rm = TRUE)) %>% 
@@ -73,9 +73,13 @@ items_data <- green_data %>%
 ```{r}
 items_data %>% 
   group_by(student) %>% 
-  summarize(
-    across(green_tot:open_tot,
-           list(mean = ~ mean(.x, na.rm= TRUE))))
+  summarize(green_mean = mean(green_tot, na.rm = TRUE),
+            comp_mean = mean(comp_tot, na.rm = TRUE),
+            intel_mean = mean(intel_tot, na.rm = TRUE),
+            open_mean = mean(open_tot, na.rm = TRUE)) %>% 
+  ggplot() +
+  aes(x = student, y = green_mean) +
+  geom_jitter(fill = "blue", color = "red", alpha = .5, size = 3)
 ```
 
 
