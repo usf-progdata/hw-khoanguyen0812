@@ -6,21 +6,92 @@ The dataset includes data from **students** and **non-students**.
 ```{r}
 dictionary <- readr::read_csv("green_dictionary.csv")
 green_data <- readr::read_csv("green_data.csv")
+library(tidyverse)
+library(psychTools)
 ```
 
 For your assignment, do the following.
 
-  1. Inspect the item responses (e.g., with graphs or by summarizing distinct values). 
+### 1. Inspect the item responses (e.g., with graphs or by summarizing distinct values). 
+
+```{r}
+as_tibble(green_data)
+```
+
+```{r}
+reversed <- dictionary %>% 
+  filter(Keying == -1) %>% 
+  pull(Item)
+``` 
+
+```{r}
+green_data %>% 
+mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response")) %>% 
+  select(id, student)
+```
+
+```{r}
+green_data %>% 
+  mutate(across(all_of(reversed),
+                ~ recode(.x, "5" = 1,
+                         "4" = 2,
+                         "3" = 3,
+                         "2" = 4,
+                         "1" = 5),
+                .names = "{.col}r"))
+```
+
+```{r}
+reversed_columns <- c("green2r", "comp6r", "comp7r", "comp8r", "comp9r", "comp10r", "intel7r", "intel8r", "intel9r", "intel10r", "open7r", "open8r", "open9r", "open10r")
+comp_ex <- c("comp6", "comp7", "comp8", "comp9", "comp10")
+intel_ex <- c("intel7", "intel8", "intel9", "intel10")
+open_ex <- c("open7", "open8", "open9", "open10")
+```
+
+```{r}
+green_data %>% 
+  mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .default  = "No_Response")) %>% 
+  rowwise() %>%
+  mutate(green_tot = mean(c_across(green1:green5 & !green2), na.rm = TRUE)) %>%
+  mutate(comp_tot = mean(c_across(comp1:comp10 & !comp_ex), na.rm = TRUE)) %>% 
+  mutate(intel_tot = mean(c_across(intel1:intel10 & !intel_ex), na.rm = TRUE)) %>% 
+  mutate(open_tot = mean(c_across(open1:open10 & !open_ex),  na.rm = TRUE)) %>% 
+  select(id, green_tot, comp_tot, intel_tot, open_tot, student)
+```
+
+```{r}
+items_data <- green_data %>% 
+  mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .default = "No_Response")) %>% 
+  rowwise() %>%
+  mutate(green_tot = mean(c_across(green1:green5 & !green2), na.rm = TRUE)) %>%
+  mutate(comp_tot = mean(c_across(comp1:comp10 & !comp_ex), na.rm = TRUE)) %>% 
+  mutate(intel_tot = mean(c_across(intel1:intel10 & !intel_ex), na.rm = TRUE)) %>% 
+  mutate(open_tot = mean(c_across(open1:open10 & !open_ex),  na.rm = TRUE)) %>% 
+  select(id, green_tot, comp_tot, intel_tot, open_tot, student)
+```
+
+```{r}
+items_data %>% 
+  group_by(student) %>% 
+  summarize(
+    across(green_tot:open_tot,
+           list(mean = ~ mean(.x, na.rm= TRUE))))
+```
+
+
      Is anything unusual?
-  2. Compute total scores for the four scales. 
+     
+> Yes, there is something unusual, the student categories have some listed as NA with all missing values or partially have values. The ones with all NA value throughout the result can be assumed to have been removed while the ones who have partial data are assumed to be unwilling to answer the question. This makes coding much harder as there are currently no sufficient ways to deal with this issue (not as far as the content and knowledge being taught in the clas up until this point)
+
+### 2. Compute total scores for the four scales. 
      Recode variables as needed.
-  3. Rescale the variables so that they go from 0-100 instead of the original range.
+### 3. Rescale the variables so that they go from 0-100 instead of the original range.
      Name the recaled variables `*_pomp`.
-  4. Make plots that illustrate the distributions of the 4 POMP-scored variables.
-  5. Make scatterplots showing the relationships between **green reputation** and each personality trait.
+### 4. Make plots that illustrate the distributions of the 4 POMP-scored variables.
+### 5. Make scatterplots showing the relationships between **green reputation** and each personality trait.
      Include trend lines for **students** and **non-students**.
      What do these plots show?
-  6. Compare **green reputation** for students and non-students using a **rainfall plot** (bar + density + data points).
-  7. Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.
+### 6. Compare **green reputation** for students and non-students using a **rainfall plot** (bar + density + data points).
+### 7. Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.
   
 In your assignment, prepare an RMarkdown file that includes both the coding and (for 4-7) narrative descriptions of your results.

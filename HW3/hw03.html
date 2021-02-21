@@ -211,17 +211,180 @@ summary {
 ##   id = col_character()
 ## )
 ## i Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --</code></pre>
+<pre><code>## v ggplot2 3.3.3     v purrr   0.3.4
+## v tibble  3.0.5     v dplyr   1.0.3
+## v tidyr   1.1.2     v stringr 1.4.0
+## v readr   1.4.0     v forcats 0.5.0</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(psychTools)</code></pre>
 <p>For your assignment, do the following.</p>
-<ol style="list-style-type: decimal">
-<li>Inspect the item responses (e.g., with graphs or by summarizing distinct values). Is anything unusual?</li>
-<li>Compute total scores for the four scales. Recode variables as needed.</li>
-<li>Rescale the variables so that they go from 0-100 instead of the original range. Name the recaled variables <code>*_pomp</code>.</li>
-<li>Make plots that illustrate the distributions of the 4 POMP-scored variables.</li>
-<li>Make scatterplots showing the relationships between <strong>green reputation</strong> and each personality trait. Include trend lines for <strong>students</strong> and <strong>non-students</strong>. What do these plots show?</li>
-<li>Compare <strong>green reputation</strong> for students and non-students using a <strong>rainfall plot</strong> (bar + density + data points).</li>
-<li>Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.</li>
-</ol>
+<div id="inspect-the-item-responses-e.g.-with-graphs-or-by-summarizing-distinct-values." class="section level3">
+<h3>1. Inspect the item responses (e.g., with graphs or by summarizing distinct values).</h3>
+<pre class="r"><code>as_tibble(green_data)</code></pre>
+<pre><code>## # A tibble: 373 x 37
+##    id    green1 green2 green3 green4 green5 comp1 comp2 comp3 comp4 comp5 comp6
+##    &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 9099       4      2      5      4      3     2     5     4     4     2     2
+##  2 6275       3      5      3      3      1     4     5     4     5     5     1
+##  3 8116       4      2      5      4      3     4     5     5     4     5     1
+##  4 8586       4      3      5      4      3     4     5     5     4     5     1
+##  5 0406       3      2      4      4      4     4     4     4     4     4     2
+##  6 5645       4      3      4      4      3     5     5     5     4     4     2
+##  7 3788       1      1      1      1      1     3     3     3     3     3     3
+##  8 8424       4      3      2      2      2     1     1     1     2     2     4
+##  9 8450       4      2      3      5      2     4     4     4     4     4     1
+## 10 0512       4      2      5      5      4     5     2     5     4     2     2
+## # ... with 363 more rows, and 25 more variables: comp7 &lt;dbl&gt;, comp8 &lt;dbl&gt;,
+## #   comp9 &lt;dbl&gt;, comp10 &lt;dbl&gt;, intel1 &lt;dbl&gt;, intel2 &lt;dbl&gt;, intel3 &lt;dbl&gt;,
+## #   intel4 &lt;dbl&gt;, intel5 &lt;dbl&gt;, intel6 &lt;dbl&gt;, intel7 &lt;dbl&gt;, intel8 &lt;dbl&gt;,
+## #   intel9 &lt;dbl&gt;, intel10 &lt;dbl&gt;, open1 &lt;dbl&gt;, open2 &lt;dbl&gt;, open3 &lt;dbl&gt;,
+## #   open4 &lt;dbl&gt;, open5 &lt;dbl&gt;, open6 &lt;dbl&gt;, open7 &lt;dbl&gt;, open8 &lt;dbl&gt;,
+## #   open9 &lt;dbl&gt;, open10 &lt;dbl&gt;, student &lt;dbl&gt;</code></pre>
+<pre class="r"><code>reversed &lt;- dictionary %&gt;% 
+  filter(Keying == -1) %&gt;% 
+  pull(Item)</code></pre>
+<pre class="r"><code>green_data %&gt;% 
+mutate(student = recode(student, &quot;1&quot; = &quot;Not_Student&quot;, &quot;2&quot; = &quot;Student&quot;, .missing = &quot;No_Response&quot;)) %&gt;% 
+  select(id, student)</code></pre>
+<pre><code>## Warning: Problem with `mutate()` input `student`.
+## i Unreplaced values treated as NA as .x is not compatible. Please specify replacements exhaustively or supply .default
+## i Input `student` is `recode(student, `1` = &quot;Not_Student&quot;, `2` = &quot;Student&quot;, .missing = &quot;No_Response&quot;)`.</code></pre>
+<pre><code>## # A tibble: 373 x 2
+##    id    student    
+##    &lt;chr&gt; &lt;chr&gt;      
+##  1 9099  Student    
+##  2 6275  Student    
+##  3 8116  Student    
+##  4 8586  Student    
+##  5 0406  Student    
+##  6 5645  Student    
+##  7 3788  Student    
+##  8 8424  Student    
+##  9 8450  Not_Student
+## 10 0512  Student    
+## # ... with 363 more rows</code></pre>
+<pre class="r"><code>green_data %&gt;% 
+  mutate(across(all_of(reversed),
+                ~ recode(.x, &quot;5&quot; = 1,
+                         &quot;4&quot; = 2,
+                         &quot;3&quot; = 3,
+                         &quot;2&quot; = 4,
+                         &quot;1&quot; = 5),
+                .names = &quot;{.col}r&quot;))</code></pre>
+<pre><code>## # A tibble: 373 x 51
+##    id    green1 green2 green3 green4 green5 comp1 comp2 comp3 comp4 comp5 comp6
+##    &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 9099       4      2      5      4      3     2     5     4     4     2     2
+##  2 6275       3      5      3      3      1     4     5     4     5     5     1
+##  3 8116       4      2      5      4      3     4     5     5     4     5     1
+##  4 8586       4      3      5      4      3     4     5     5     4     5     1
+##  5 0406       3      2      4      4      4     4     4     4     4     4     2
+##  6 5645       4      3      4      4      3     5     5     5     4     4     2
+##  7 3788       1      1      1      1      1     3     3     3     3     3     3
+##  8 8424       4      3      2      2      2     1     1     1     2     2     4
+##  9 8450       4      2      3      5      2     4     4     4     4     4     1
+## 10 0512       4      2      5      5      4     5     2     5     4     2     2
+## # ... with 363 more rows, and 39 more variables: comp7 &lt;dbl&gt;, comp8 &lt;dbl&gt;,
+## #   comp9 &lt;dbl&gt;, comp10 &lt;dbl&gt;, intel1 &lt;dbl&gt;, intel2 &lt;dbl&gt;, intel3 &lt;dbl&gt;,
+## #   intel4 &lt;dbl&gt;, intel5 &lt;dbl&gt;, intel6 &lt;dbl&gt;, intel7 &lt;dbl&gt;, intel8 &lt;dbl&gt;,
+## #   intel9 &lt;dbl&gt;, intel10 &lt;dbl&gt;, open1 &lt;dbl&gt;, open2 &lt;dbl&gt;, open3 &lt;dbl&gt;,
+## #   open4 &lt;dbl&gt;, open5 &lt;dbl&gt;, open6 &lt;dbl&gt;, open7 &lt;dbl&gt;, open8 &lt;dbl&gt;,
+## #   open9 &lt;dbl&gt;, open10 &lt;dbl&gt;, student &lt;dbl&gt;, green2r &lt;dbl&gt;, comp6r &lt;dbl&gt;,
+## #   comp7r &lt;dbl&gt;, comp8r &lt;dbl&gt;, comp9r &lt;dbl&gt;, comp10r &lt;dbl&gt;, intel7r &lt;dbl&gt;,
+## #   intel8r &lt;dbl&gt;, intel9r &lt;dbl&gt;, intel10r &lt;dbl&gt;, open7r &lt;dbl&gt;, open8r &lt;dbl&gt;,
+## #   open9r &lt;dbl&gt;, open10r &lt;dbl&gt;</code></pre>
+<pre class="r"><code>reversed_columns &lt;- c(&quot;green2r&quot;, &quot;comp6r&quot;, &quot;comp7r&quot;, &quot;comp8r&quot;, &quot;comp9r&quot;, &quot;comp10r&quot;, &quot;intel7r&quot;, &quot;intel8r&quot;, &quot;intel9r&quot;, &quot;intel10r&quot;, &quot;open7r&quot;, &quot;open8r&quot;, &quot;open9r&quot;, &quot;open10r&quot;)
+comp_ex &lt;- c(&quot;comp6&quot;, &quot;comp7&quot;, &quot;comp8&quot;, &quot;comp9&quot;, &quot;comp10&quot;)
+intel_ex &lt;- c(&quot;intel7&quot;, &quot;intel8&quot;, &quot;intel9&quot;, &quot;intel10&quot;)
+open_ex &lt;- c(&quot;open7&quot;, &quot;open8&quot;, &quot;open9&quot;, &quot;open10&quot;)</code></pre>
+<pre class="r"><code>green_data %&gt;% 
+  mutate(student = recode(student, &quot;1&quot; = &quot;Not_Student&quot;, &quot;2&quot; = &quot;Student&quot;, .default  = &quot;No_Response&quot;)) %&gt;% 
+  rowwise() %&gt;%
+  mutate(green_tot = mean(c_across(green1:green5 &amp; !green2), na.rm = TRUE)) %&gt;%
+  mutate(comp_tot = mean(c_across(comp1:comp10 &amp; !comp_ex), na.rm = TRUE)) %&gt;% 
+  mutate(intel_tot = mean(c_across(intel1:intel10 &amp; !intel_ex), na.rm = TRUE)) %&gt;% 
+  mutate(open_tot = mean(c_across(open1:open10 &amp; !open_ex),  na.rm = TRUE)) %&gt;% 
+  select(id, green_tot, comp_tot, intel_tot, open_tot, student)</code></pre>
+<pre><code>## Note: Using an external vector in selections is ambiguous.
+## i Use `all_of(comp_ex)` instead of `comp_ex` to silence this message.
+## i See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.
+## This message is displayed once per session.</code></pre>
+<pre><code>## Note: Using an external vector in selections is ambiguous.
+## i Use `all_of(intel_ex)` instead of `intel_ex` to silence this message.
+## i See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.
+## This message is displayed once per session.</code></pre>
+<pre><code>## Note: Using an external vector in selections is ambiguous.
+## i Use `all_of(open_ex)` instead of `open_ex` to silence this message.
+## i See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.
+## This message is displayed once per session.</code></pre>
+<pre><code>## # A tibble: 373 x 6
+## # Rowwise: 
+##    id    green_tot comp_tot intel_tot open_tot student    
+##    &lt;chr&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;      
+##  1 9099       4         3.4      2.33     3.67 Student    
+##  2 6275       2.5       4.6      3.83     3.83 Student    
+##  3 8116       4         4.6      3.67     4    Student    
+##  4 8586       4         4.6      3.17     3.67 Student    
+##  5 0406       3.75      4        3.67     3.83 Student    
+##  6 5645       3.75      4.6      3.67     3.83 Student    
+##  7 3788       1         3        3        3    Student    
+##  8 8424       2.5       1.4      4.17     1.83 Student    
+##  9 8450       3.5       4        3.67   -12.7  Not_Student
+## 10 0512       4.5       3.6      3.67     3.67 Student    
+## # ... with 363 more rows</code></pre>
+<pre class="r"><code>items_data &lt;- green_data %&gt;% 
+  mutate(student = recode(student, &quot;1&quot; = &quot;Not_Student&quot;, &quot;2&quot; = &quot;Student&quot;, .default = &quot;No_Response&quot;)) %&gt;% 
+  rowwise() %&gt;%
+  mutate(green_tot = mean(c_across(green1:green5 &amp; !green2), na.rm = TRUE)) %&gt;%
+  mutate(comp_tot = mean(c_across(comp1:comp10 &amp; !comp_ex), na.rm = TRUE)) %&gt;% 
+  mutate(intel_tot = mean(c_across(intel1:intel10 &amp; !intel_ex), na.rm = TRUE)) %&gt;% 
+  mutate(open_tot = mean(c_across(open1:open10 &amp; !open_ex),  na.rm = TRUE)) %&gt;% 
+  select(id, green_tot, comp_tot, intel_tot, open_tot, student)</code></pre>
+<pre class="r"><code>items_data %&gt;% 
+  group_by(student) %&gt;% 
+  summarize(
+    across(green_tot:open_tot,
+           list(mean = ~ mean(.x, na.rm= TRUE))))</code></pre>
+<pre><code>## # A tibble: 4 x 5
+##   student     green_tot_mean comp_tot_mean intel_tot_mean open_tot_mean
+## * &lt;chr&gt;                &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;         &lt;dbl&gt;
+## 1 No_Response           4.25          2.8            2.5           3   
+## 2 Not_Student           3.39          3.28           2.34          2.84
+## 3 Student               3.31          3.94           3.49          3.71
+## 4 &lt;NA&gt;                  3.32          4.07           3.68          1.96</code></pre>
+<pre><code> Is anything unusual?
+ </code></pre>
+<blockquote>
+<p>Yes, there is something unusual, the student categories have some listed as NA with all missing values or partially have values. The ones with all NA value throughout the result can be assumed to have been removed while the ones who have partial data are assumed to be unwilling to answer the question. This makes coding much harder as there are currently no sufficient ways to deal with this issue (not as far as the content and knowledge being taught in the clas up until this point)</p>
+</blockquote>
+</div>
+<div id="compute-total-scores-for-the-four-scales." class="section level3">
+<h3>2. Compute total scores for the four scales.</h3>
+<pre><code> Recode variables as needed.</code></pre>
+</div>
+<div id="rescale-the-variables-so-that-they-go-from-0-100-instead-of-the-original-range." class="section level3">
+<h3>3. Rescale the variables so that they go from 0-100 instead of the original range.</h3>
+<pre><code> Name the recaled variables `*_pomp`.</code></pre>
+</div>
+<div id="make-plots-that-illustrate-the-distributions-of-the-4-pomp-scored-variables." class="section level3">
+<h3>4. Make plots that illustrate the distributions of the 4 POMP-scored variables.</h3>
+</div>
+<div id="make-scatterplots-showing-the-relationships-between-green-reputation-and-each-personality-trait." class="section level3">
+<h3>5. Make scatterplots showing the relationships between <strong>green reputation</strong> and each personality trait.</h3>
+<pre><code> Include trend lines for **students** and **non-students**.
+ What do these plots show?</code></pre>
+</div>
+<div id="compare-green-reputation-for-students-and-non-students-using-a-rainfall-plot-bar-density-data-points." class="section level3">
+<h3>6. Compare <strong>green reputation</strong> for students and non-students using a <strong>rainfall plot</strong> (bar + density + data points).</h3>
+</div>
+<div id="compute-a-summary-table-of-means-sds-medians-minima-and-maxima-for-the-four-total-scores-for-students-and-non-students." class="section level3">
+<h3>7. Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.</h3>
 <p>In your assignment, prepare an RMarkdown file that includes both the coding and (for 4-7) narrative descriptions of your results.</p>
+</div>
 </div>
 
 
