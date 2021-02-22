@@ -2,8 +2,12 @@
 title: "HW2"
 author: "Khoa Nguyen"
 date: "2/8/2021"
-output: html_document
+output: 
+  github_document: default
+  html_document: default
 ---
+
+<!-- BMW: Please knit to both html and github markdown by writing your output like above and knitting twice. -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -11,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(gapminder)
-library(tidyverse)
+library(tidyverse) # library(tidyverse) loads both dplyr and ggplot2, so you don't need those others if you load tidyverse
 library(dplyr)
 library(ggplot2)
 ```
@@ -24,8 +28,10 @@ Use filter() to subset the gapminder data to three countries of your choice in t
 
 
 ```{r}
-filter(gapminder, country %in% c("China", "Japan", "France") & year ==1970:1979)
+filter(gapminder, country %in% c("China", "Japan", "France") & year %in% 1970:1979)
 ```
+
+<!-- BMW: No, `==` compares each row to only 1 value, first row to 1970, second row to 1971, third row to 1972, etc. If you want to compare each row to all of the values in 1970:1979, you need to use %in% -->
 
 ## 1.2
 
@@ -33,9 +39,11 @@ Use the pipe operator %>% to select “country” and “gdpPercap” from your 
 
 ```{r}
 gapminder %>% 
-  filter(country %in% c("China", "France", "Japan") & year == 1970:1979) %>% 
+  filter(country %in% c("China", "France", "Japan") & year %in% 1970:1979) %>% 
   select(country, gdpPercap)
 ```
+
+<!-- BMW: As above -->
 
 ## 1.3
 
@@ -44,8 +52,22 @@ Make a new variable in gapminder for the change in life expectancy from the prev
 
 ```{r}
 gapminder %>% 
-  mutate(dropLifeExp = lag(lifeExp)) %>% 
-  filter(dropLifeExp <= lifeExp)
+  group_by(country) %>% 
+  mutate(lagLifeExp = lag(lifeExp)) %>% 
+  filter(lagLifeExp >= lifeExp)
+```
+
+<!-- BMW: Close. lag() gives the previous row value. So, filter(lag(lifeExp) <= lifeExp) will show rows where life expectancy is _larger_ (increase) compared to the previous measurement. So, you need to do >= as above. -->
+
+<!-- BMW: You also need to group by country so that you don't compare rows across countries. -->
+
+<!-- BMW: It might be clearer to compute the change in life expectancy -->
+
+```{r}
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(changeLifeExp = lifeExp - lag(lifeExp)) %>% 
+  filter(changeLifeExp < 0)
 ```
 
 ## 1.4
@@ -59,7 +81,9 @@ gapminder %>%
   group_by(country) %>%
   filter(gdpPercap == max(gdpPercap))
 ```
-  
+
+<!-- BMW: Great work! -->
+
 ## 1.5
 
 Produce a scatterplot of Canada’s life expectancy vs. GDP per capita using ggplot2, without defining a new variable. That is, after filtering the gapminder data set, pipe it directly into the ggplot() function. In your plot, put GDP per capita on a log scale.
@@ -74,6 +98,8 @@ gapminder %>%
   scale_y_continuous(trans = "log10")
 ```
 
+<!-- BMW: Great work! -->
+
 # Excercise 2
 
 ## 2.1
@@ -86,7 +112,7 @@ Make a scatterplot of these variables using ggplot().
 
 
 ```{r}
-library(palmerpenguins)
+library(palmerpenguins) # BMW: Put all library() calls in the setup chunk at the top of the script
 palmerpenguins::penguins %>% 
   summarize(across(c(body_mass_g, flipper_length_mm),
   list(mean = ~ mean(.x, na.rm = TRUE), 
@@ -97,7 +123,7 @@ palmerpenguins::penguins %>%
 palmerpenguins::penguins %>% 
   ggplot() +
   aes(x = body_mass_g, y = flipper_length_mm) +
-  geom_jitter() +
+  # geom_jitter() + # geom_litter() is the same as geom_point(), but it also moves each point a little ("jitters"). Don't use both, and don't use jitter with two continuous variables unless the points are overlapping.
   geom_point(fill = "white", color = "red", alpha = .5,  size = 3)
 ```
 
@@ -125,11 +151,11 @@ palmerpenguins::penguins %>%
 ```{r}
 palmerpenguins::penguins %>% 
   ggplot() +
-  geom_jitter(height = 1.5, 
+  aes(x = species, y = body_mass_g) + # BMW: Put aes() before your geoms. It doesn't matter for making the code work, but it makes it easier to read.
+  geom_jitter(height = 0, # BMW: height = 1.5 adds a bunch of noise to the y axis, which is what you have mapped your continous variable to. You don't want that. You want height = 0
+              width = .2,
               alpha = .5,
-              size = 1.0) +
-  aes(x = species, y = body_mass_g) +
-  geom_point(fill = "black", color = "red", alpha = .5, size = 3)
+              size = 1.0) # As above, don't use both geom_jitter and geom_point together.
 
 palmerpenguins::penguins %>% 
   ggplot() +
