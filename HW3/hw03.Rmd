@@ -85,10 +85,21 @@ items_data %>%
 
      Is anything unusual?
      
-> Yes, there is something unusual, the student categories have some listed as NA with all missing values or partially have values. The ones with all NA value throughout the result can be assumed to have been removed while the ones who have partial data are assumed to be unwilling to answer the question. This makes coding much harder as there are currently no sufficient ways to deal with this issue (not as far as the content and knowledge being taught in the clas up until this point)
+> Yes, there is something unusual, the student categories have some listed as NA with all missing values or partially have values. The ones with all NA value throughout the result can be assumed to have been removed while the ones who have partial data are assumed to be unwilling to answer the question. This makes coding much harder as there are currently no sufficient ways to deal with this issue (not as far as the content and knowledge being taught in the clas up until this point).
+
+> Some data seem to be duplicated also which is a point for concern.
 
 ### 2. Compute total scores for the four scales. 
      Recode variables as needed.
+     
+```{r}
+items_data %>% 
+  group_by(student) %>% 
+  summarize(green_mean = mean(green_tot, na.rm = TRUE),
+            comp_mean = mean(comp_tot, na.rm = TRUE),
+            intel_mean = mean(intel_tot, na.rm = TRUE),
+            open_mean = mean(open_tot, na.rm = TRUE))
+```
 ### 3. Rescale the variables so that they go from 0-100 instead of the original range.
      Name the recaled variables `*_pomp`.
 ### 4. Make plots that illustrate the distributions of the 4 POMP-scored variables.
