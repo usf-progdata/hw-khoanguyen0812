@@ -23,11 +23,18 @@ as_tibble(green_data)
 green_data %>% 
   summary()
 ```
+
 ```{r}
 green_data %>% 
 mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response", .default = "Unknown")) %>% 
   select(id, student)
 ```
+
+```{r}
+reversed <- dictionary %>% 
+  filter(Keying == -1) %>% 
+  pull(Item)
+``` 
 
 ```{r}
 green_data %>% 
@@ -41,10 +48,19 @@ green_data %>%
   summary()
 ```
 
+```{r}
+green_data %>% 
+  ggplot() +
+  aes(x= comp2) +
+  geom_histogram()
+```
 
      Is anything unusual?
-     
+
+#### _Most of the students coding are done in question 2. Refer to question 2 for more information_
+
 > Yes, there is something unusual, the student categories have some listed as NA with all missing values or partially have values. The ones with all NA value throughout the result can be assumed to have been removed while the ones who have partial data are assumed to be unwilling to answer the question. This makes coding much harder as there are currently no sufficient ways to deal with this issue (not as far as the content and knowledge being taught in the clas up until this point).
+
 
 > Some data are in the -99 which is outside of dictionary Keying and other explainable computation which is affecting the data's characteristic as a whole.
 
@@ -117,10 +133,7 @@ items_data %>%
   summarize(green_mean = mean(green_tot, na.rm = TRUE),
             comp_mean = mean(comp_tot, na.rm = TRUE),
             intel_mean = mean(intel_tot, na.rm = TRUE),
-            open_mean = mean(open_tot, na.rm = TRUE)) %>% 
-  ggplot() +
-  aes(x = student, y = green_mean) +
-  geom_jitter(fill = "blue", color = "red", alpha = .5, size = 3)
+            open_mean = mean(open_tot, na.rm = TRUE))
 ```
 
 ```{r}
