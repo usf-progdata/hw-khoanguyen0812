@@ -18,11 +18,51 @@ For your assignment, do the following.
 as_tibble(green_data)
 ```
 
+
+```{r}
+green_data %>% 
+  summary()
+```
+```{r}
+green_data %>% 
+mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response", .default = "Unknown")) %>% 
+  select(id, student)
+```
+
+```{r}
+green_data %>% 
+  mutate(across(all_of(reversed),
+                ~ recode(.x, "5" = 1,
+                         "4" = 2,
+                         "3" = 3,
+                         "2" = 4,
+                         "1" = 5),
+                .names = "{.col}r")) %>% 
+  summary()
+```
+
+
+     Is anything unusual?
+     
+> Yes, there is something unusual, the student categories have some listed as NA with all missing values or partially have values. The ones with all NA value throughout the result can be assumed to have been removed while the ones who have partial data are assumed to be unwilling to answer the question. This makes coding much harder as there are currently no sufficient ways to deal with this issue (not as far as the content and knowledge being taught in the clas up until this point).
+
+> Some data are in the -99 which is outside of dictionary Keying and other explainable computation which is affecting the data's characteristic as a whole.
+
+### 2. Compute total scores for the four scales. 
+     Recode variables as needed.
+
 ```{r}
 reversed <- dictionary %>% 
   filter(Keying == -1) %>% 
   pull(Item)
 ``` 
+
+```{r}
+green_data %>% 
+  mutate(across(everything(),
+                ~na_if(.x, -99))) %>% 
+  summary()
+```
 
 ```{r}
 green_data %>% 
@@ -38,7 +78,8 @@ green_data %>%
                          "3" = 3,
                          "2" = 4,
                          "1" = 5),
-                .names = "{.col}r"))
+                .names = "{.col}r")) %>% 
+  mutate()
 ```
 
 ```{r}
@@ -46,7 +87,7 @@ reversed_columns <- c("green2r", "comp6r", "comp7r", "comp8r", "comp9r", "comp10
 comp_ex <- c("comp6", "comp7", "comp8", "comp9", "comp10")
 intel_ex <- c("intel7", "intel8", "intel9", "intel10")
 open_ex <- c("open7", "open8", "open9", "open10")
-```
+```     
 
 ```{r}
 green_data %>% 
@@ -82,16 +123,6 @@ items_data %>%
   geom_jitter(fill = "blue", color = "red", alpha = .5, size = 3)
 ```
 
-
-     Is anything unusual?
-     
-> Yes, there is something unusual, the student categories have some listed as NA with all missing values or partially have values. The ones with all NA value throughout the result can be assumed to have been removed while the ones who have partial data are assumed to be unwilling to answer the question. This makes coding much harder as there are currently no sufficient ways to deal with this issue (not as far as the content and knowledge being taught in the clas up until this point).
-
-> Some data seem to be duplicated also which is a point for concern.
-
-### 2. Compute total scores for the four scales. 
-     Recode variables as needed.
-     
 ```{r}
 items_data %>% 
   group_by(student) %>% 
