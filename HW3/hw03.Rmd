@@ -184,25 +184,10 @@ items_data %>%
   > I want to make sure that it is the variables that are being rescaled and later caculation can follow so I did this: 
   
 ```{r}
-new_green_data %>% 
-  mutate(green_pomp = rescale(c_across(green1:green5, 
-                         to=c(0,100), 
-                         from=c(1,5)),
-    comp_pomp = rescale(comp_tot, 
-                        to=c(0,100), 
-                        from=c(1,5)),
-    intel_pomp = rescale(intel_tot, 
-                         to=c(0,100), 
-                         from=c(1,5)),
-    open_pomp = rescale(open_tot, 
-                        to=c(0,100), 
-                        from=c(1,5))) %>%
-  select(id, 
-         student, 
-         green_pomp, 
-         comp_pomp, 
-         intel_pomp, 
-         open_pomp)
+data_pomp <- new_green_data %>%
+  mutate(c_across(green1:open10r),
+         ~ recode(.x, "1" = 0, "2" = 25, "3" = 50, "4" = 75, "5" = 100),
+         .names = "{.col}_pomp")
 ```
 
 ### 4. Make plots that illustrate the distributions of the 4 POMP-scored variables.
