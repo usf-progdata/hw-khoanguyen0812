@@ -185,9 +185,16 @@ items_data %>%
   
 ```{r}
 data_pomp <- new_green_data %>%
-  mutate(c_across(green1:open10r),
+  mutate(across(c(green1:open10r &!student),
          ~ recode(.x, "1" = 0, "2" = 25, "3" = 50, "4" = 75, "5" = 100),
-         .names = "{.col}_pomp")
+         .names = "{.col}_pomp"))
+```
+
+  > After I transform it, I wanted to produce a summary of the new data frame that included the pomps. 
+  
+```{r}
+data_pomp %>% 
+  summary()
 ```
 
 ### 4. Make plots that illustrate the distributions of the 4 POMP-scored variables.
