@@ -199,6 +199,21 @@ data_pomp %>%
 
 ### 4. Make plots that illustrate the distributions of the 4 POMP-scored variables.
 
+```{r}
+data_pomp %>% 
+  rowwise() %>% 
+  mutate(green_tot_pomp = mean(c(green1_pomp, green2r_pomp, green3_pomp, green4_pomp, green5_pomp), na.rm = TRUE),
+         comp_tot_pomp = mean(c(comp1_pomp, comp2_pomp, comp3_pomp, comp4_pomp, comp5_pomp, comp6r_pomp, comp7r_pomp, comp8r_pomp, comp9r_pomp, comp10r_pomp), 
+                         na.rm = TRUE),
+         intel_tot_pomp = mean(c(intel1_pomp, intel2_pomp, intel3_pomp, intel4_pomp, intel5_pomp, intel6_pomp, intel7r_pomp, intel8r_pomp, intel9r_pomp, intel10r_pomp),
+                          na.rm = TRUE),
+         open_tot_pomp = mean(c(open1_pomp, open2_pomp, open3_pomp, open4_pomp, open5_pomp, open6_pomp, open7r_pomp, open8r_pomp, open9r_pomp, open10r_pomp), 
+                         na.rm = TRUE)) %>% 
+  na.omit() %>% 
+  select(id, green_tot_pomp, comp_tot_pomp, intel_tot_pomp, open_tot_pomp, student)
+```
+
+
 
 ### 5. Make scatterplots showing the relationships between **green reputation** and each personality trait.
      Include trend lines for **students** and **non-students**.
