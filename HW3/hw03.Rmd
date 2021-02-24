@@ -334,21 +334,32 @@ pomp_tot_data %>%
 
 ### 7. Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.
 
-```{r)
-pomp_tot_data %>% 
+  
+```{r}
+  pomp_tot_data %>% 
   group_by(student) %>% 
   summarize(across(green_tot_pomp:open_tot_pomp,
   list(mean = ~ mean(.x, na.rm= TRUE),
                 sd = ~ sd(.x, na.rm = TRUE),
                 min = ~ min(.x, na.rm = TRUE),
                 max = ~ max(.x, na.rm = TRUE))))
-  ```
-  
-  
-  ```{r}
-  pomp_sum_table
-  ```
+```
 
+```{r}
+pomp_summ_table <- pomp_tot_data %>% 
+  group_by(student) %>% 
+  summarize(across(green_tot_pomp:open_tot_pomp,
+  list(mean = ~ mean(.x, na.rm= TRUE),
+                sd = ~ sd(.x, na.rm = TRUE),
+                min = ~ min(.x, na.rm = TRUE),
+                max = ~ max(.x, na.rm = TRUE))))
+```
+
+  > Here is the final calcualtion (summary table for the pomp values).
+  
+```{r}
+print(pomp_summ_table)
+```
 
   
 In your assignment, prepare an RMarkdown file that includes both the coding and (for 4-7) narrative descriptions of your results.
