@@ -14,17 +14,23 @@ library(scales)
 For your assignment, do the following.
 
 ### 1. Inspect the item responses (e.g., with graphs or by summarizing distinct values). 
+  
+  > I started by transforming the dataframe into Tibble.
 
 ```{r}
 as_tibble(green_data)
 ```
 
 
+  > I then check the summary of the data 
+  
 ```{r}
 green_data %>% 
   summary()
 ```
 
+  > I noticed that I was running into some issues so I decided to do a quick recode.
+  
 ```{r}
 green_data %>% 
 mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response", .default = "Unknown")) %>% 
@@ -49,6 +55,8 @@ green_data %>%
   summary()
 ```
 
+  > Not sure why I was doing all of that work but I decided to check the graph for abnormalities. 
+  
 ```{r}
 green_data %>% 
   ggplot() +
@@ -68,12 +76,16 @@ green_data %>%
 ### 2. Compute total scores for the four scales. 
      Recode variables as needed.
 
+ > I started with the basic of what I knew here.
+ 
 ```{r}
 reversed <- dictionary %>% 
   filter(Keying == -1) %>% 
   pull(Item)
 ``` 
 
+ > I then recoded everything that is needed to be recoded.
+  
 ```{r}
 green_data %>% 
   mutate(across(everything(),
@@ -98,7 +110,25 @@ green_data %>%
                 .names = "{.col}r"))
 ```
 
-### Since I have the necessary information for the calculation, I decided to make a list of the newly reversed columns into a new variable along with a list of the excluding variables for some of the columns for easier and faster coding process.
+  > I decided to make a new data frame with the recoded data.
+  
+```{r}
+new_green_data <- green_data %>% 
+  mutate(across(everything(),
+                ~na_if(.x, -99))) %>%
+  mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response", .default = "Unknown")) %>%
+  mutate(across(all_of(reversed),
+                ~ recode(.x, "5" = 1,
+                         "4" = 2,
+                         "3" = 3,
+                         "2" = 4,
+                         "1" = 5),
+                .names = "{.col}r"))
+```
+
+
+  > Since I have the necessary information for the calculation, I decided to make a list of the newly reversed columns into a new variable along with a list of the excluding variables for some of the columns for easier and faster coding process.
+  
 ```{r} 
 reversed_columns <- c("green2r", "comp6r", "comp7r", "comp8r", "comp9r", "comp10r", "intel7r", "intel8r", "intel9r", "intel10r", "open7r", "open8r", "open9r", "open10r")
 comp_ex <- c("comp6", "comp7", "comp8", "comp9", "comp10")
@@ -106,30 +136,29 @@ intel_ex <- c("intel7", "intel8", "intel9", "intel10")
 open_ex <- c("open7", "open8", "open9", "open10")
 ```     
 
+  > I started to do my calculation here with the new exclusion lists and the new data frame.
+  
 ```{r}
-green_data %>% 
-  mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response", .default = "Unknown")) %>% 
-  mutate(across(everything(),
-                ~na_if(.x, -99))) %>% 
+new_green_data %>% 
   rowwise() %>%
   mutate(green_tot = mean(c_across(green1:green5 & !green2), na.rm = TRUE)) %>%
   mutate(comp_tot = mean(c_across(comp1:comp10 & !comp_ex), na.rm = TRUE)) %>% 
   mutate(intel_tot = mean(c_across(intel1:intel10 & !intel_ex), na.rm = TRUE)) %>% 
   mutate(open_tot = mean(c_across(open1:open10 & !open_ex),  na.rm = TRUE)) %>% 
+  na.omit() %>% 
   select(id, green_tot, comp_tot, intel_tot, open_tot, student)
 ```
 
+  > 
+
 ```{r}
-items_data <- green_data %>% 
-  mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing = "No_Response", .default = "Unknown")) %>% 
-  mutate(across(everything(),
-                ~na_if(.x, -99))) %>% 
+items_data <- new_green_data %>% 
   rowwise() %>%
   mutate(green_tot = mean(c_across(green1:green5 & !green2), na.rm = TRUE)) %>%
   mutate(comp_tot = mean(c_across(comp1:comp10 & !comp_ex), na.rm = TRUE)) %>% 
   mutate(intel_tot = mean(c_across(intel1:intel10 & !intel_ex), na.rm = TRUE)) %>% 
   mutate(open_tot = mean(c_across(open1:open10 & !open_ex),  na.rm = TRUE)) %>% 
-  select(id, green_tot, comp_tot, intel_tot, open_tot, student)
+  na.omit()
 ```
 
 ```{r}
@@ -149,6 +178,7 @@ items_data %>%
             intel_mean = mean(intel_tot, na.rm = TRUE),
             open_mean = mean(open_tot, na.rm = TRUE))
 ```
+
 ### 3. Rescale the variables so that they go from 0-100 instead of the original range.
      Name the rescaled variables `*_pomp`.
      
