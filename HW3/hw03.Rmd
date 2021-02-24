@@ -98,7 +98,8 @@ green_data %>%
                 .names = "{.col}r"))
 ```
 
-```{r}
+### Since I have the necessary information for the calculation, I decided to make a list of the newly reversed columns into a new variable along with a list of the excluding variables for some of the columns for easier and faster coding process.
+```{r} 
 reversed_columns <- c("green2r", "comp6r", "comp7r", "comp8r", "comp9r", "comp10r", "intel7r", "intel8r", "intel9r", "intel10r", "open7r", "open8r", "open9r", "open10r")
 comp_ex <- c("comp6", "comp7", "comp8", "comp9", "comp10")
 intel_ex <- c("intel7", "intel8", "intel9", "intel10")
