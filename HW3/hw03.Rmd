@@ -35,7 +35,7 @@ green_data %>%
   summary()
 ```
 
-  > I noticed that I was running into some issues so I decided to do a quick recode.
+  > I noticed in the dictionary, there is a reverse Keying so I decided to reverse the codes before I try to intrepret anymore data.
   
 ```{r}
 green_data %>% 
@@ -52,11 +52,7 @@ reversed <- dictionary %>%
 ```{r}
 green_data %>% 
   mutate(across(all_of(reversed),
-                ~ recode(.x, "5" = 1,
-                         "4" = 2,
-                         "3" = 3,
-                         "2" = 4,
-                         "1" = 5),
+                ~ recode(.x, "5" = 1, "4" = 2, "3" = 3, "2" = 4, "1" = 5),
                 .names = "{.col}r")) %>% 
   summary()
 ```
@@ -142,7 +138,7 @@ intel_ex <- c("intel7", "intel8", "intel9", "intel10")
 open_ex <- c("open7", "open8", "open9", "open10")
 ```     
 
-  > I started to do my calculation here with the new exclusion lists and the new data frame.
+  > I started to do my calculation here with the new exclusion lists and the new data frame ( I decided to manually typed in every variables that were reverse so that way, I can see what I did if the code does not work on me).
   
 ```{r}
 new_green_data %>% 
@@ -296,28 +292,44 @@ grid.arrange(green_tot_histo,
  
 ```{r}
 pomp_tot_data %>% 
+  filter(!is.na(student)) %>% 
   ggplot() +
   aes(x = green_tot_pomp, y = comp_tot_pomp, color = student) +
-  geom_jitter(alpha = .5, size = 3)
+  geom_jitter(alpha = .5, size = 3) +
+  geom_smooth(method = "lm")
 ```
+  
 
 ```{r}
 pomp_tot_data %>% 
+  filter(!is.na(student)) %>% 
   ggplot() +
   aes(x = green_tot_pomp, y = intel_tot_pomp, color = student) +
-  geom_jitter(alpha = .5, size = 3)
+  geom_jitter(alpha = .5, size = 3) +
+  geom_smooth(method = "lm")
 ```
 
 ```{r}
 pomp_tot_data %>% 
+  filter(!is.na(student)) %>% 
   ggplot() +
   aes(x = green_tot_pomp, y = open_tot_pomp, color = student) +
-  geom_jitter(alpha = .5, size = 3)
+  geom_jitter(alpha = .5, size = 3) +
+  geom_smooth(method = "lm")
 ```
 
-
+  > In all of the scatterplots, it can be said that there is a weak to moderate positive correlation between green personality and other personalities. The relation between green personality and other personality is a positive one due to the effect it has on each other at a certain threshold although the evidence is not so clear on this matter. Students and non-students also seems to have a positive correlation with the personality factors with the exception of the non-respondent seeing a negative correlation. As the non-respondents' green personality goes up, their comp, intel, and open seem to go down.
 
 ### 6. Compare **green reputation** for students and non-students using a **rainfall plot** (bar + density + data points).
+
+```{r}
+pomp_tot_data %>% 
+  filter(!is.na(student)) %>% 
+  ggplot() +
+  aes(x = green_tot_pomp, color = student, fill = student) +
+  geom_bar()
+```
+
 ### 7. Compute a summary table of means, SDs, medians, minima, and maxima for the four total scores for students and non-students.
   
 In your assignment, prepare an RMarkdown file that includes both the coding and (for 4-7) narrative descriptions of your results.
