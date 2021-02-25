@@ -283,7 +283,9 @@ grid.arrange(green_tot_histo,
              intel_tot_histo, 
              open_tot_histo)
 ```
-
+  > The result indicated that green personality seems to have a more scattered data points throughout than the rest and sseemed to be the most normally distributed. Intel seems to be a little bitof a bimodel, open tot is slightly right skewed. The Comp personality is also slightly right skewed with its average being approximately around 70 to 75.
+  
+  
 ### 5. Make scatterplots showing the relationships between **green reputation** and each personality trait.
      Include trend lines for **students** and **non-students**.
      What do these plots show?
