@@ -45,7 +45,7 @@ mutate(student = recode(student, "1" = "Not_Student", "2" = "Student", .missing 
 
 ```{r}
 reversed <- dictionary %>% 
-  filter(Keying == -1) %>% 
+  filter(Keying == -1 | Keying == -2) %>% 
   pull(Item)
 ``` 
 
