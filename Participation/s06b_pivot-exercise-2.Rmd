@@ -1,0 +1,83 @@
+---
+title: "Exercises: Multivariate pivoting"
+output: 
+  html_document:
+    theme: paper
+---
+
+```{r}
+library(tidyverse)
+library(DT)
+set.seed(123)
+missing_w2_parent <- sample(1:500, 30)
+missing_w2_child <- c(missing_w2_parent[1:5], sample(1:500, 25))
+family  <- read_csv(
+  "https://raw.githubusercontent.com/bwiernik/progdata/main/inst/tutorials/data/family_data.csv"
+) %>% 
+  mutate(
+    across(
+      starts_with("w2") & contains("parent"),
+      ~ ifelse(family_id %in% missing_w2_parent, NA_real_, .x)
+    ),
+    across(
+      starts_with("w2") & contains("child"),
+      ~ ifelse(family_id %in% missing_w2_child, NA_real_, .x)
+    )
+  )
+```
+
+<!---The following chunk allows errors when knitting--->
+
+```{r allow errors, echo = FALSE}
+knitr::opts_chunk$set(error = TRUE, warning = FALSE)
+```
+
+You're working on a longitudinal study of parent-child relationships.
+You have collected data from 500 families over 2 waves.
+In each wave, both the child and parent completed measures of **communication behavior** and **relationship satisfaction**. 
+
+```{r}
+family %>% 
+  DT::datatable(rownames = FALSE)
+```
+
+1. Reshape the dataset to a "longer" format.
+
+  - Make each row **1 score**
+  - Have columns for *family_id*, *family_member*, *wave*, *scale*, and *score*.
+
+```{r}
+family_longest <- family %>% 
+  pivot_longer(cols = -family_id,
+               names_to = c("wave", "scale", "family_member"),
+               names_sep = "_",
+               values_to = "measurement")
+
+print(family_longest)
+```
+
+2. Reshape the dataset to a "longer" format.
+
+  - Make each row **1 person**
+  - Have columns for *family_id*, *family_member*, *wave*, *comm*, and *satis*.
+
+```{r}
+family_long <- family %>% 
+  pivot_longer(cols = -family_id,
+               names_to =  c("wave", ".value", "family_member"),
+               names_sep = "_")
+print(family_long)
+```
+
+3. Some families are missing wave 2 data for parent, child, or both. 
+   Which families are missing wave 2 data for at least one person?
+
+```{r}
+print(missing_w2_parent)
+print(missing_w2_child)
+```
+  > Family 415, 463, 179, 14, 195 are the ones missing at least 1 data point for both child and parent. The aforementioned family along with: 306, 118, 299, 229, 244, 497, 374, 153, 90, 91, 256, 197, 485, 441, 348, 137, 477, 355, 328,  26, 7, 495, 479, 254 and 211 420, 78, 81, 43, 359, 373, 332, 143 4, 32, 490 109, 263, 393, 425, 330, 23, 411, 444, 309, 135, 481, 483, 224, 166 are the ones with at least 1 missing data point.
+
+Question: Is is easier to easier to find the missing data in the wide or long format?
+
+wide format makes it a lot easier to find missing data than longer format.
