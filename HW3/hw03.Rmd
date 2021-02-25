@@ -82,7 +82,7 @@ green_data %>%
  
 ```{r}
 reversed <- dictionary %>% 
-  filter(Keying == -1) %>% 
+  filter(Keying == -1 | Keying == -2) %>% 
   pull(Item)
 ``` 
 
@@ -318,7 +318,7 @@ pomp_tot_data %>%
   geom_smooth(method = "lm")
 ```
 
-  > In all of the scatterplots, it can be said that there is a weak to moderate positive correlation between green personality and other personalities. The relation between green personality and other personality is a positive one due to the effect it has on each other at a certain threshold although the evidence is not so clear on this matter. Students and non-students also seems to have a positive correlation with the personality factors with the exception of the non-respondent seeing a negative correlation. As the non-respondents' green personality goes up, their comp, intel, and open seem to go down.Comp, Open seems to have the greatest impact on students and their green personality.
+  > In all of the scatterplots, it can be said that there is a moderate positive correlation between green personality and other personalities. The relation between green personality and other personality is a positive one due to the effect it has on each other at a certain threshold although the evidence is not so clear on this matter. Students and non-students also seems to have a positive correlation with the personality factors with the exception of the non-respondent seeing a negative correlation. As the non-respondents' green personality goes up, their comp, intel, and open seem to go down.Comp, Open seems to have the greatest impact on students and their green personality.Students also seem to have a higher postive correlation at the end than non-students.
 
 ### 6. Compare **green reputation** for students and non-students using a **rainfall plot** (bar + density + data points).
 
