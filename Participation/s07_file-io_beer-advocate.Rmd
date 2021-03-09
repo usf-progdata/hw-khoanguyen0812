@@ -6,16 +6,43 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+<<<<<<< Updated upstream
 ```
 
+=======
+library(tidyverse)
+library(here)
+library(tidyr)
+library(dplyr)
+```
+
+
+>>>>>>> Stashed changes
 For this activity, download the data file at this location to the `data` subfolder in your `participation` folder. 
 This dataset contains information about different catagories of beer as rated on <beeradvocate.com>.
 The data are originally from [here](http://scottjanish.com/relationship-of-abv-to-beer-scores/).
 
 ```{r}
 url <- "https://raw.githubusercontent.com/USF-Psych-DataSci/Classroom/master/data/beer-advocate.csv"
+<<<<<<< Updated upstream
 ```
 
+=======
+beer <- read_csv(url) %>% 
+cols(
+  Beer_Category = col_character(),
+  Average_ABV = col_double(),
+  rAVG = col_double())
+```
+
+```{r}
+write_csv(url, 
+          here::here("Participation", "data", "beer.csv"),
+          na)
+```
+
+
+>>>>>>> Stashed changes
 The dataset contains 3 variables:
 
   1. Beer category
