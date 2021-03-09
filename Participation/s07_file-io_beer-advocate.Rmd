@@ -6,10 +6,10 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-<<<<<<< Updated upstream
 ```
 
 =======
+```{r}
 library(tidyverse)
 library(here)
 library(tidyr)
@@ -24,15 +24,16 @@ The data are originally from [here](http://scottjanish.com/relationship-of-abv-t
 
 ```{r}
 url <- "https://raw.githubusercontent.com/USF-Psych-DataSci/Classroom/master/data/beer-advocate.csv"
-<<<<<<< Updated upstream
 ```
 
-=======
-beer <- read_csv(url) %>% 
-cols(
-  Beer_Category = col_character(),
-  Average_ABV = col_double(),
-  rAVG = col_double())
+```{r}
+beer <- read_csv(url)
+print(beer)
+```
+
+```{r}
+write_csv(beer,
+          here::here("Participation", "Data", "Beer.csv"))
 ```
 
 ```{r}
