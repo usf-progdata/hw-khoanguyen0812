@@ -1,16 +1,25 @@
 # PLEASE READ ME!!!!
 
 __This project is about figuring out what is the difference in divorce rate amongst men and women.__
+
 The main csv files include:
-> 1. Major_file.csv
+ 1. Major_file.csv
 
-> 2. Both_gender.csv
+ 2. Both_gender.csv
 
-> 3. Men_data.csv
+ 3. Men_data.csv
 
-> 4. Women_data.csv
+ 4. Women_data.csv
 
+As stated in the README file of the one who compiled the data set, it says:
 
+> This folder contains data behind the story Marriage Isn’t Dead — Yet.
+
+> Source for all data is Decennial Census (years 1960 to 2000) and American Community Survey (years 2001-2012), via IPUMS USA.
+
+> Except in the divorce file, figures represent share of the relevant population that has never been married (MARST == 6 in the IPUMS data). Note that in the story, charts generally show the share that have ever been married, which is simply 1 - n. In the divorce file, figures are share of the relevant population that is currently divorced, conditional on having ever been married.
+
+> Variable names are as follows. Number in variable names are age ranges, so all_2534 is the marriage rate for everyone ages 25 to 34.
 
 Header | Description
 ---|---------
