@@ -14,7 +14,7 @@ The main csv files include:
  __These data files are located in the *"data_raw"* subfolder, there is an *"output"* folder specifically made for the computed output of graphs, tables, etc.
  There is also the *".R"* folder specifically made for the storing of codes and markdown files.__
 
-As stated in the README file of the one who compiled the data set, it says:
+As stated in the README file of the ones who compiled the data set, it says:
 
 > This folder contains data behind the story [Marriage Isn’t Dead — Yet](http://fivethirtyeight.com/features/marriage-isnt-dead-yet/).
 
