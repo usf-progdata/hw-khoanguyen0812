@@ -1,13 +1,12 @@
----
-title: "README"
-author: "Khoa Nguyen"
-date: "3/9/2021"
-output: html_document
----
+# PLEASE READ ME!!!!
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+__This project is about figuring out what is the difference in divorce rate amongst men and women.__
+The main csv files include:
+> Major_file.csv
+> Both_gender.csv
+> Men_data.csv
+> Women_data.csv
+
 
 Header | Description
 ---|---------
