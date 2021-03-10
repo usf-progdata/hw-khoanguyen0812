@@ -26,7 +26,7 @@ As stated in the README file of the ones who compiled the data set, it says:
 
 - Ben Casselman, Mehta Dhrumil (2018).
 
-this project is a check-up on the initial findings stemming from the [Marriage Isn’t Dead — Yet](http://fivethirtyeight.com/features/marriage-isnt-dead-yet/) article. The article was looking into the marriage age of the current population along with the trend of marriage when age is taken into account. This project will be taken a slightly different route in which the marriage versus divorce rate will be compared side by side when age and educational level is taken into account.
+this project is a check-up on the initial findings stemming from the [Marriage Isn’t Dead — Yet](http://fivethirtyeight.com/features/marriage-isnt-dead-yet/) article. The article was looking into the marriage age of the current population along with the trend of marriage when age is taken into account. This project will be taken a slightly different route in which the marriage versus divorce rate will be compared side by side when age and educational level is taken into account. Data within each columns represents a proportion of the population that has married or divorced in the *"both_gender"* to *"women_data"* and *"Major_data"* respectively. 
 
 > Header | Description
 ---|---------
