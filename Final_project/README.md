@@ -2,13 +2,13 @@
 
 __This project is about figuring out what is the difference in divorce rate amongst men and women.__
 The main csv files include:
-> 1. Major_file.csv/
+> 1. Major_file.csv
 
-> 2. Both_gender.csv/
+> 2. Both_gender.csv
 
-> 3. Men_data.csv/
+> 3. Men_data.csv
 
-> 4. Women_data.csv/
+> 4. Women_data.csv
 
 
 
