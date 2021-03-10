@@ -23,13 +23,31 @@ if ( !dir.exists( here::here("Final_project", "data_raw") ) ) {
 
 
 ```{r}
-url <- "marriage/divorce.csv"
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/divorce.csv"
+bothsexes <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/both_sexes.csv"
+men <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/men.csv"
+women <-  "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/women.csv"
 ```
 
 ```{r}
-Major_data <- read.csv(url)
+Major_data <- read.csv(url,
+                       na = c("NA", " ", "-999"))
+both_gender <-  read.csv(bothsexes,
+                       na = c("NA", " ", "-999"))
+men_data <-  read.csv(men,
+                       na = c("NA", " ", "-999"))
+women_data <-  read.csv(women,
+                       na = c("NA", " ", "-999"))
 ```
 
 ```{r}
-marriage/divorce.csv
+write.csv(Major_data,
+          here::here("Final_project", "data_raw", "Major_data.csv"))
+write.csv(both_gender,
+          here::here("Final_project", "data_raw", "Both_gender.csv"))
+write.csv(men_data,
+          here::here("Final_project", "data_raw", "Men_data.csv"))
+write.csv(women_data,
+          here::here("Final_project", "data_raw", "Women_data.csv"))
 ```
+
