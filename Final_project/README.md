@@ -28,7 +28,7 @@ As stated in the README file of the ones who compiled the data set, it says:
 
 this project is a check-up on the initial findings stemming from the [Marriage Isn’t Dead — Yet](http://fivethirtyeight.com/features/marriage-isnt-dead-yet/) article. The article was looking into the marriage age of the current population along with the trend of marriage when age is taken into account. This project will be taken a slightly different route in which the marriage versus divorce rate will be compared side by side when age and educational level is taken into account.
 
-Header | Description
+> Header | Description
 ---|---------
 `all` | Total (or all men/women in sex-specific files)
 `HS` | High school graduate or less (EDUCD < 65)
@@ -52,3 +52,9 @@ Header | Description
 `nowork` | Not employed at least 50 weeks prior year
 `nokids_all` | No own children living at home
 `kids_all` | At least one own child living at home
+
+- Ben Casselman, Mehta Dhrumil (2018).
+
+Reference:
+https://github.com/fivethirtyeight/data/tree/master/marriage
+
