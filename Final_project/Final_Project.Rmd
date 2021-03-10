@@ -1,0 +1,36 @@
+---
+title: "Final_Proj"
+author: "Khoa Nguyen"
+date: "3/9/2021"
+output:  
+  html_document:
+    theme: Paper
+  gitub_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+library(tidyr)
+```
+
+```{r}
+if ( !dir.exists( here::here("Final_project", "data_raw") ) ) {
+  dir.create( here::here("Final_project", "data_raw"), recursive = TRUE )
+}
+```
+
+
+
+```{r}
+url <- "marriage/divorce.csv"
+```
+
+```{r}
+Major_data <- read.csv(url)
+```
+
+```{r}
+marriage/divorce.csv
+```
