@@ -11,7 +11,7 @@ The main csv files include:
 
  4. Women_data.csv
  
- __These data files are located in the *"data_raw"* subfolder, there is an *"output"* folder specifically made for the computed output of graphs, tables, etc.
+ __These data files are located in the *"data_raw"* subfolder, the _"data"_ folder is meant to store any computed or modified dataset. There is an *"output"* folder specifically made for the computed output of graphs, tables, etc.
  There is also the *".R"* folder specifically made for the storing of codes and markdown files.__
 
 As stated in the README file of the ones who compiled the data set, it says:
