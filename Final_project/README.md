@@ -1,6 +1,6 @@
 # PLEASE READ ME!!!!
 
-__This project is about figuring out what is the difference in divorce rate amongst men and women.__
+__This project is about figuring out what is the difference in divorce trend among men and women throughout the year, along with the marriage rate and marriage trend throughout the year.__
 
 The main csv files include:
  1. Major_file.csv
