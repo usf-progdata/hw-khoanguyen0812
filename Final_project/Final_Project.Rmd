@@ -52,6 +52,39 @@ write.csv(women_data,
 ```
 
 ```{r}
-
+read.csv(
+  here::here("Final_Project", "data_raw", "Major_data.csv"))
+read.csv(
+  here::here("Final_Project", "data_raw", "Both_gender.csv"))
+read.csv(
+  here::here("Final_Project", "data_raw", "Men_data.csv"))
+read.csv(
+  here::here("Final_Project", "data_raw", "Women_data.csv"))
 ```
 
+Summarizing data and observing the marriage trend.
+
+```{r}
+both_gender %>% 
+  group_by(year) %>% 
+  summarize(across(c(HS_2534:BAo_2534),
+                      list(mean = ~ mean(.x, na.rm= TRUE),
+                sd = ~ sd(.x, na.rm = TRUE),
+                min = ~ min(.x, na.rm = TRUE),
+                max = ~ max(.x, na.rm = TRUE))))
+```
+
+```{r}
+tibble_both_gender <- as.tibble(both_gender)
+print(tibble_both_gender)
+```
+
+Bachelor Degree or higher:
+```{r}
+tibble_both_gender %>%
+  select(year, date, BAp_2534) %>% 
+  group_by(year) %>%
+  filter(BAp_2534 == max(BAp_2534))
+```
+
+As we can see here, the maximum marriage population for people with higher level of education seems to increase over time. This of course is just one variable.
