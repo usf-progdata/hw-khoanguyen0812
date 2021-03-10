@@ -14,19 +14,9 @@ The main csv files include:
  __These data files are located in the *"data_raw"* subfolder, the _"data"_ folder is meant to store any computed or modified dataset. There is an *"output"* folder specifically made for the computed output of graphs, tables, etc.
  There is also the *".R"* folder specifically made for the storing of codes and markdown files.__
 
-As stated in the README file of the ones who compiled the data set, it says:
+This project is a check-up on the initial findings stemming from the [Marriage Isn’t Dead — Yet](http://fivethirtyeight.com/features/marriage-isnt-dead-yet/) article. The article was looking into the marriage age of the current population along with the trend of marriage when age is taken into account. This project will be taken a slightly different route in which the marriage versus divorce rate will be compared side by side when age and educational level is taken into account. Data within each columns represents a proportion of the population that has married or divorced in the *"both_gender"* to *"women_data"* and *"Major_data"* respectively. 
 
-> This folder contains data behind the story [Marriage Isn’t Dead — Yet](http://fivethirtyeight.com/features/marriage-isnt-dead-yet/).
-
-> Source for all data is Decennial Census (years 1960 to 2000) and American Community Survey (years 2001-2012), via IPUMS USA.
-
-> Except in the divorce file, figures represent share of the relevant population that has never been married (MARST == 6 in the IPUMS data). Note that in the story, charts generally show the share that have ever been married, which is simply 1 - n. In the divorce file, figures are share of the relevant population that is currently divorced, conditional on having ever been married.
-
-> Variable names are as follows. Number in variable names are age ranges, so all_2534 is the marriage rate for everyone ages 25 to 34.
-
-- Ben Casselman, Mehta Dhrumil (2018).
-
-this project is a check-up on the initial findings stemming from the [Marriage Isn’t Dead — Yet](http://fivethirtyeight.com/features/marriage-isnt-dead-yet/) article. The article was looking into the marriage age of the current population along with the trend of marriage when age is taken into account. This project will be taken a slightly different route in which the marriage versus divorce rate will be compared side by side when age and educational level is taken into account. Data within each columns represents a proportion of the population that has married or divorced in the *"both_gender"* to *"women_data"* and *"Major_data"* respectively. 
+any "_2534" is an indication of an age range which makes daa viewing a lot easier. Below is a provided table from [Github authors](https://github.com/fivethirtyeight/data/blob/master/marriage/README.md) in which both Ben Casselman, Mehta Dhrumil (2018) provided a useful table for the data variables along with their description. In it, they stated (this table is a direct quote and work from them):
 
 > Header | Description
 ---|---------
@@ -56,5 +46,5 @@ this project is a check-up on the initial findings stemming from the [Marriage I
 - Ben Casselman, Mehta Dhrumil (2018).
 
 Reference:
-https://github.com/fivethirtyeight/data/tree/master/marriage
+https://github.com/fivethirtyeight/data/blob/master/marriage/README.md
 
