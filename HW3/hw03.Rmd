@@ -9,11 +9,7 @@ green_data <- readr::read_csv("green_data.csv")
 library(tidyverse)
 library(psychTools)
 library(scales)
-library(dplyr)
-library(tidyr)
-library(tibble)
 library(scales)
-library(ggplot2)
 library(gridExtra)
 ```
 
@@ -24,7 +20,8 @@ For your assignment, do the following.
   > I started by transforming the dataframe into Tibble.
 
 ```{r}
-as_tibble(green_data)
+green_tibble <- as_tibble(green_data)
+green_tibble
 ```
 
 
@@ -141,43 +138,127 @@ open_ex <- c("open7", "open8", "open9", "open10")
   > I started to do my calculation here with the new exclusion lists and the new data frame ( I decided to manually typed in every variables that were reverse so that way, I can see what I did if the code does not work on me).
   
 ```{r}
-new_green_data %>% 
-  rowwise() %>% 
-  mutate(green_tot = mean(c(green1, green2r, green3, green4, green5), na.rm = TRUE),
-         comp_tot = mean(c(comp1, comp2, comp3, comp4, comp5, comp6r, comp7r, comp8r, comp9r, comp10r), 
-                         na.rm = TRUE),
-         intel_tot = mean(c(intel1, intel2, intel3, intel4, intel5, intel6, intel7r, intel8r, intel9r, intel10r),
-                          na.rm = TRUE),
-         open_tot = mean(c(open1, open2, open3, open4, open5, open6, open7r, open8r, open9r, open10r), 
-                         na.rm = TRUE)) %>% 
-  na.omit() %>% 
+new_green_data %>%
+  rowwise() %>%
+  mutate(
+    green_tot = mean(c(green1, green2r, green3, green4, green5), na.rm = TRUE),
+    comp_tot = mean(
+      c(
+        comp1,
+        comp2,
+        comp3,
+        comp4,
+        comp5,
+        comp6r,
+        comp7r,
+        comp8r,
+        comp9r,
+        comp10r
+      ),
+      na.rm = TRUE
+    ),
+    intel_tot = mean(
+      c(
+        intel1,
+        intel2,
+        intel3,
+        intel4,
+        intel5,
+        intel6,
+        intel7r,
+        intel8r,
+        intel9r,
+        intel10r
+      ),
+      na.rm = TRUE
+    ),
+    open_tot = mean(
+      c(
+        open1,
+        open2,
+        open3,
+        open4,
+        open5,
+        open6,
+        open7r,
+        open8r,
+        open9r,
+        open10r
+      ),
+      na.rm = TRUE
+    )
+  ) %>%
+  na.omit() %>%
   select(id, green_tot, comp_tot, intel_tot, open_tot, student)
 ```
 
   > I ended up wanting to save this calculation into a new variable for later usage.
 
 ```{r}
-items_data <- new_green_data %>% 
-  rowwise() %>% 
-  mutate(green_tot = mean(c(green1, green2r, green3, green4, green5), na.rm = TRUE),
-         comp_tot = mean(c(comp1, comp2, comp3, comp4, comp5, comp6r, comp7r, comp8r, comp9r, comp10r), 
-                         na.rm = TRUE),
-         intel_tot = mean(c(intel1, intel2, intel3, intel4, intel5, intel6, intel7r, intel8r, intel9r, intel10r),
-                          na.rm = TRUE),
-         open_tot = mean(c(open1, open2, open3, open4, open5, open6, open7r, open8r, open9r, open10r), 
-                         na.rm = TRUE)) %>% 
+items_data <- new_green_data %>%
+  rowwise() %>%
+  mutate(
+    green_tot = mean(c(green1, green2r, green3, green4, green5), na.rm = TRUE),
+    comp_tot = mean(
+      c(
+        comp1,
+        comp2,
+        comp3,
+        comp4,
+        comp5,
+        comp6r,
+        comp7r,
+        comp8r,
+        comp9r,
+        comp10r
+      ),
+      na.rm = TRUE
+    ),
+    intel_tot = mean(
+      c(
+        intel1,
+        intel2,
+        intel3,
+        intel4,
+        intel5,
+        intel6,
+        intel7r,
+        intel8r,
+        intel9r,
+        intel10r
+      ),
+      na.rm = TRUE
+    ),
+    open_tot = mean(
+      c(
+        open1,
+        open2,
+        open3,
+        open4,
+        open5,
+        open6,
+        open7r,
+        open8r,
+        open9r,
+        open10r
+      ),
+      na.rm = TRUE
+    )
+  ) %>%
   na.omit()
 ```
 
   > Summary by students or non students.
 
 ```{r}
-items_data %>% 
-  group_by(student) %>% 
-  summarize(green_mean = mean(green_tot, na.rm = TRUE),
-            comp_mean = mean(comp_tot, na.rm = TRUE),
-            intel_mean = mean(intel_tot, na.rm = TRUE),
-            open_mean = mean(open_tot, na.rm = TRUE))
+items_data %>%
+  group_by(student) %>%
+  summarize(
+    green_mean = mean(green_tot, na.rm = TRUE),
+    comp_mean = mean(comp_tot, na.rm = TRUE),
+    intel_mean = mean(intel_tot, na.rm = TRUE),
+    open_mean = mean(open_tot, na.rm = TRUE)
+  )
 ```
 
 ### 3. Rescale the variables so that they go from 0-100 instead of the original range.
@@ -187,9 +268,18 @@ items_data %>%
   
 ```{r}
 data_pomp <- new_green_data %>%
-  mutate(across(c(green1:open10r &!student),
-         ~ recode(.x, "1" = 0, "2" = 25, "3" = 50, "4" = 75, "5" = 100),
-         .names = "{.col}_pomp"))
+   mutate(across(
+    c(green1:open10r & !student),
+    ~ recode(
+      .x,
+      "1" = 0,
+      "2" = 25,
+      "3" = 50,
+      "4" = 75,
+      "5" = 100
+    ),
+    .names = "{.col}_pomp"
+  ))
 ```
 
   > After I transform it, I wanted to produce a summary of the new data frame that included the pomps. 
@@ -204,30 +294,135 @@ data_pomp %>%
   > I first started out by calculating the total of all of the "pomps" columns.
 
 ```{r}
-data_pomp %>% 
-  rowwise() %>% 
-  mutate(green_tot_pomp = mean(c(green1_pomp, green2r_pomp, green3_pomp, green4_pomp, green5_pomp), na.rm = TRUE),
-         comp_tot_pomp = mean(c(comp1_pomp, comp2_pomp, comp3_pomp, comp4_pomp, comp5_pomp, comp6r_pomp, comp7r_pomp, comp8r_pomp, comp9r_pomp, comp10r_pomp), 
-                         na.rm = TRUE),
-         intel_tot_pomp = mean(c(intel1_pomp, intel2_pomp, intel3_pomp, intel4_pomp, intel5_pomp, intel6_pomp, intel7r_pomp, intel8r_pomp, intel9r_pomp, intel10r_pomp),
-                          na.rm = TRUE),
-         open_tot_pomp = mean(c(open1_pomp, open2_pomp, open3_pomp, open4_pomp, open5_pomp, open6_pomp, open7r_pomp, open8r_pomp, open9r_pomp, open10r_pomp), 
-                         na.rm = TRUE)) %>% 
-  na.omit() %>% 
-  select(id, green_tot_pomp, comp_tot_pomp, intel_tot_pomp, open_tot_pomp, student)
+data_pomp %>%
+  rowwise() %>%
+  mutate(
+    green_tot_pomp = mean(
+      c(
+        green1_pomp,
+        green2r_pomp,
+        green3_pomp,
+        green4_pomp,
+        green5_pomp
+      ),
+      na.rm = TRUE
+    ),
+    comp_tot_pomp = mean(
+      c(
+        comp1_pomp,
+        comp2_pomp,
+        comp3_pomp,
+        comp4_pomp,
+        comp5_pomp,
+        comp6r_pomp,
+        comp7r_pomp,
+        comp8r_pomp,
+        comp9r_pomp,
+        comp10r_pomp
+      ),
+      na.rm = TRUE
+    ),
+    intel_tot_pomp = mean(
+      c(
+        intel1_pomp,
+        intel2_pomp,
+        intel3_pomp,
+        intel4_pomp,
+        intel5_pomp,
+        intel6_pomp,
+        intel7r_pomp,
+        intel8r_pomp,
+        intel9r_pomp,
+        intel10r_pomp
+      ),
+      na.rm = TRUE
+    ),
+    open_tot_pomp = mean(
+      c(
+        open1_pomp,
+        open2_pomp,
+        open3_pomp,
+        open4_pomp,
+        open5_pomp,
+        open6_pomp,
+        open7r_pomp,
+        open8r_pomp,
+        open9r_pomp,
+        open10r_pomp
+      ),
+      na.rm = TRUE
+    )
+  ) %>%
+  na.omit() %>%
+  select(id,
+         green_tot_pomp,
+         comp_tot_pomp,
+         intel_tot_pomp,
+         open_tot_pomp,
+         student)
 ```
   > I ended up wanting to create another variable containing the total for all of the pomps.
 
 ```{r}
-pomp_tot_data <- data_pomp %>% 
-  rowwise() %>% 
-  mutate(green_tot_pomp = mean(c(green1_pomp, green2r_pomp, green3_pomp, green4_pomp, green5_pomp), na.rm = TRUE),
-         comp_tot_pomp = mean(c(comp1_pomp, comp2_pomp, comp3_pomp, comp4_pomp, comp5_pomp, comp6r_pomp, comp7r_pomp, comp8r_pomp, comp9r_pomp, comp10r_pomp), 
-                         na.rm = TRUE),
-         intel_tot_pomp = mean(c(intel1_pomp, intel2_pomp, intel3_pomp, intel4_pomp, intel5_pomp, intel6_pomp, intel7r_pomp, intel8r_pomp, intel9r_pomp, intel10r_pomp),
-                          na.rm = TRUE),
-         open_tot_pomp = mean(c(open1_pomp, open2_pomp, open3_pomp, open4_pomp, open5_pomp, open6_pomp, open7r_pomp, open8r_pomp, open9r_pomp, open10r_pomp), 
-                         na.rm = TRUE))
+pomp_tot_data <- data_pomp %>%
+  rowwise() %>%
+  mutate(
+    green_tot_pomp = mean(
+      c(
+        green1_pomp,
+        green2r_pomp,
+        green3_pomp,
+        green4_pomp,
+        green5_pomp
+      ),
+      na.rm = TRUE
+    ),
+    comp_tot_pomp = mean(
+      c(
+        comp1_pomp,
+        comp2_pomp,
+        comp3_pomp,
+        comp4_pomp,
+        comp5_pomp,
+        comp6r_pomp,
+        comp7r_pomp,
+        comp8r_pomp,
+        comp9r_pomp,
+        comp10r_pomp
+      ),
+      na.rm = TRUE
+    ),
+    intel_tot_pomp = mean(
+      c(
+        intel1_pomp,
+        intel2_pomp,
+        intel3_pomp,
+        intel4_pomp,
+        intel5_pomp,
+        intel6_pomp,
+        intel7r_pomp,
+        intel8r_pomp,
+        intel9r_pomp,
+        intel10r_pomp
+      ),
+      na.rm = TRUE
+    ),
+    open_tot_pomp = mean(
+      c(
+        open1_pomp,
+        open2_pomp,
+        open3_pomp,
+        open4_pomp,
+        open5_pomp,
+        open6_pomp,
+        open7r_pomp,
+        open8r_pomp,
+        open9r_pomp,
+        open10r_pomp
+      ),
+      na.rm = TRUE
+    )
+  )
 ```
 
   > I then calculated the mean of the total for the pomps and group them by student.
@@ -297,7 +492,7 @@ pomp_tot_data %>%
   filter(!is.na(student)) %>% 
   ggplot() +
   aes(x = green_tot_pomp, y = comp_tot_pomp, color = student) +
-  geom_jitter(alpha = .5, size = 3) +
+  geom_jitter(alpha = .5, size = .2) +
   geom_smooth(method = "lm")
 ```
   
@@ -326,10 +521,13 @@ pomp_tot_data %>%
 
 ```{r}
 pomp_tot_data %>% 
-  filter(!is.na(student)) %>% 
+  drop_na(green_tot_pomp) %>% 
   ggplot() +
-  aes(x = green_tot_pomp, color = student, fill = student) +
-  geom_bar()
+  aes(x = green_tot_pomp, y = student, color = student, fill = student) +
+  geom_jitter(width = 0, height = .1) +
+  geom_boxplot(color = "black", fill = "transparent", width = .2) +
+  ggdist::stat_slab(height = .3, alpha = .5, position = position_nudge(y = .15))
+  
 ```
 
   > The green reputation for students and non-students seems to be similar (approximately 50 to 60 green personalty score) with the knowledge that not a lot of non-students participated in the study, which means that the ratio is unbalanced.
