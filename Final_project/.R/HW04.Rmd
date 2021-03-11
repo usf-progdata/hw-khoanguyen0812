@@ -3,8 +3,7 @@ title: "Final_Proj"
 author: "Khoa Nguyen"
 date: "3/9/2021"
 output:  
-  html_document:
-    theme: Paper
+  html_document: default
   gitub_document: default
 ---
 
@@ -12,11 +11,13 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readr)
+library(ggdist)
+library(svglite)
 ```
 
 ```{r}
 if ( !dir.exists( here::here("Final_project", "data_raw") ) ) {
-  dir.create( here::here("Final_project", "data_raw"), recursive = TRUE )
+  dir.create( here::here("Final_project", "data_raw", "output", ".R"), recursive = TRUE )
 }
 ```
 
@@ -122,3 +123,76 @@ write.csv(Divorce_trend_output,
 ```
 
 As indicated within the data for population that are 35 to 44 years of age, and has a college degree or higher, the trend for divorce rate seems to be increasing by the years when looking at their highest divorce rate for the years (slightly decreasing starting to see significant decreasing in the early 2000s).
+
+Now, let's look at some graphs for the marriage rate versus divorce rate.
+
+I first had to extract out the exact data I want to look at from the divorce dataset and compare it with the marriage one.
+
+```{r}
+Divorce_BAp_3544_Data1 <- Major_data %>% 
+  mutate(Divorce_BAp_3544 = BAp_3544) %>% 
+  select(Divorce_BAp_3544)
+Divorce_BAp_3544_Data1
+```
+
+```{r}
+Marriage_BAp_3544_Data1 <- both_gender %>% 
+  mutate(Marriage_BAp_3544 = BAp_3544) %>% 
+  select(Marriage_BAp_3544)
+Marriage_BAp_3544_Data1
+```
+
+I then combined both of them together to make the graph.
+
+
+```{r}
+cbind_BAp_3544_Compar_Data <- cbind(Marriage_BAp_3544_Data1, Divorce_BAp_3544_Data1)
+cbind_BAp_3544_Compar_Data
+```
+
+```{r}
+Rainfall_graph_for_marriage_and_divorce <- cbind_BAp_3544_Compar_Data %>% 
+  drop_na(c(Marriage_BAp_3544:Divorce_BAp_3544)) %>% 
+  ggplot +
+  aes(
+    x = Marriage_BAp_3544,
+    y = Divorce_BAp_3544,
+    fill = Divorce_BAp_3544,
+    color = Divorce_BAp_3544
+  ) +
+  geom_jitter(
+    alpha = .5,
+    height = .2,
+    width = .0,
+    na.rm = TRUE
+  ) +
+  geom_boxplot(
+    width = .1,
+    color = "Black",
+    fill = "transparent"
+  ) +
+  ggdist::stat_sample_slabinterval(
+    alpha = .5,
+    height = .2,
+    color = "black",
+    position = position_nudge(y = .2)
+  ) +
+  theme_classic() +
+  labs(title = "Comparative Data",
+       y = NULL,
+       x = "BAp_3544"
+       ) +
+  theme(plot.title.position = "plot") +
+  guides(color = guide_none(), fill = guide_none())
+Rainfall_graph_for_marriage_and_divorce
+```
+
+```{r}
+ggsave(here::here("Final_project", "output", "figure",
+                  "Rainfall_graph_for_marriage_and_divorce.svg"),
+       Rainfall_graph_for_marriage_and_divorce,
+       height = 6,
+       width = 6)
+```
+
+Oh god. This is an abomination. Okay, nothing to see here. Let's go back to regular graph.
