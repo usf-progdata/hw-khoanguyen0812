@@ -16,7 +16,7 @@ library(readr)
 
 ```{r}
 if ( !dir.exists( here::here("Final_project", "data_raw") ) ) {
-  dir.create( here::here("Final_project", "data_raw"), recursive = TRUE )
+  dir.create( here::here("Final_project", "data_raw", "output", ".R"), recursive = TRUE )
 }
 ```
 
