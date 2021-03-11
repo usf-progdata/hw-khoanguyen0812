@@ -13,11 +13,7 @@ green_data <- readr::read_csv("green_data.csv")
 library(tidyverse) # BMW: library(tidyverse) already loads dplyr, tibble, tidyr, and ggplot. You don't need both. 
 library(psychTools) # BMW: I'm not sure why you loaded psychTools?
 library(scales)
-library(dplyr)
-library(tidyr)
-library(tibble)
 library(scales)
-library(ggplot2)
 library(gridExtra)
 ```
 
@@ -31,6 +27,9 @@ For your assignment, do the following.
 
 ```{r}
 as_tibble(green_data) # BMW: It was already a tibble. But a bigger deal is that you didn't assign the result, so it wasn't saved. 
+=======
+green_tibble <- as_tibble(green_data)
+green_tibble
 ```
 
 
@@ -280,6 +279,7 @@ items_data %>%
 ```{r}
 data_pomp <- new_green_data %>%
   mutate(across(
+   mutate(across(
     c(green1:open10r & !student),
     ~ recode(
       .x,
@@ -507,7 +507,9 @@ pomp_tot_data %>%
   ggplot() +
   aes(x = green_tot_pomp, y = comp_tot_pomp, color = student, fill = student) +
   geom_jitter(alpha = .5, size = 3, height = .5, width = .5) + # BMW: If you use geom_jitter() instead of geom_point() with continuous variables, be sure to adjust the height and width so that it is a very small amount
-  geom_smooth(method = "lm")
+  aes(x = green_tot_pomp, y = comp_tot_pomp, color = student) +
+geom_jitter(alpha = .5, size = .2) +
+geom_smooth(method = "lm")
 ```
   
 
@@ -535,10 +537,13 @@ pomp_tot_data %>%
 
 ```{r}
 pomp_tot_data %>% 
-  filter(!is.na(student)) %>% 
+  drop_na(green_tot_pomp) %>% 
   ggplot() +
-  aes(x = green_tot_pomp, color = student, fill = student) +
-  geom_bar()
+  aes(x = green_tot_pomp, y = student, color = student, fill = student) +
+  geom_jitter(width = 0, height = .1) +
+  geom_boxplot(color = "black", fill = "transparent", width = .2) +
+  ggdist::stat_slab(height = .3, alpha = .5, position = position_nudge(y = .15))
+  
 ```
 
 <!-- BMW: This isn't a rainfall plot as demonstrated in class. See below. -->
