@@ -96,3 +96,29 @@ write.csv(tibble_both_gender_output1,
 ```
 
 As we can see here, the maximum marriage population for people with higher level of education seems to increase over time. This of course is just one variable.
+
+Now, let's look at divorce rate among the population throughout the year by education.
+
+```{r}
+Divorce_sum <- Major_data %>% 
+  summarize(across(c(HS_3544:BAp_3544),
+                      list(mean = ~ mean(.x, na.rm= TRUE),
+                sd = ~ sd(.x, na.rm = TRUE),
+                min = ~ min(.x, na.rm = TRUE),
+                max = ~ max(.x, na.rm = TRUE))))
+Divorce_sum
+write.csv(Divorce_sum,
+          here::here("Final_project", "output", "Divorce_sum.csv"))
+```
+
+```{r}
+Divorce_trend_output <- Major_data %>%
+  select(year, date, BAp_3544) %>% 
+  group_by(year) %>%
+  filter(BAp_3544 == max(BAp_3544))
+Divorce_trend_output
+write.csv(Divorce_trend_output,
+          here::here("Final_project", "output", "Divorce_trend_output.csv"))
+```
+
+As indicated within the data for population that are 35 to 44 years of age, and has a college degree or higher, the trend for divorce rate seems to be increasing by the years when looking at their highest divorce rate for the years (slightly decreasing starting to see significant decreasing in the early 2000s).
