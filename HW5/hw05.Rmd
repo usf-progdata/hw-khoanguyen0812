@@ -33,7 +33,15 @@ Each dataset contains the following information for the Top 3 selling scented or
   4. `Review`: For the scented candles, the text of the review.
 
 ```{r setup, include=FALSE}
-library(dplyr)
+library(tidyverse)
+library(readr)
+library(patchwork)
+library(readxl)
+```
+
+```{r}
+Scented_Data <- read_excel(here::here("HW5", "Scented_all.xlsx"))
+Unscented_Data <- read_excel(here::here("hw5", "Unscented_all.xlsx"))
 ```
 
 
@@ -63,7 +71,9 @@ Interpret these graphs.
 What do they show about scented candles over the time period?
 
 ```{r}
-
+Scented_Data %>% 
+  ggplot() %>% 
+  aes( x= as.Date(Date))
 ```
 
 
