@@ -116,6 +116,8 @@ Plot_Adj_Scent_Data <- Adjusted_Scented_Data %>%
       n.dodge = 2)) +
   scale_color_brewer(
     palette = "Dark2")
+
+Plot_Adj_Scent_Data
 ```
 
 ```{r}
@@ -163,13 +165,15 @@ Plot_Adj_Unscent_Data <- Adjusted_Unscented_Data %>%
       n.dodge = 2)) +
   scale_color_brewer(
     palette = "Dark2")
+
+Plot_Adj_Unscent_Data
 ```
 
 ```{r}
 Plot_Adj_Scent_Data + Plot_Adj_Unscent_Data
 ```
 
-> 
+> Both graphs consistently indicated a high review meaning that the quality produced by these different companies are consistent and reliable, yet, we observed a sudden and significant decrease in ratings for both scented and unscented starting on January of 2020. THis could be due to the symptoms of COVID as we can see the ratings for scented candles significantly decreases near April of 2020 (when the lock-down occured, and when COVID was recognized as a global pandemic). One of the symptoms mentioned in the diagnosis of COVID is the lost in the intricate ability to smell things correctly. This could explain why there is a sharp decrease in people's ability to enjoy the candles' smell and choose to rate them horribly despite the scented candles' track record indicated that every one liked them up until a few weeks before the lock-down occured from COVID. Another possiblity is because the scented candles could be produced by factories in China, which is where COVID originated from, it leads to a drastic decrease in production and the quality of the candles production relative to the demand. This of course means that workers are even more overworked and underpaid to procure these scented candles which leads to mishaps and low-quality scented candles. Again, these are assumptions made to explain the significant drop in ratings amongst the scented candles based on some inference knowledge that a lot of companies such as Nike, Apples, Adidas, Microsoft, etc. have their products made in China's factories and workshop as it is a lot cheaper in terms of labor than here in the States. Information on this matter can be provided upon request.
 
 
 ## Part 2: Combined plot
