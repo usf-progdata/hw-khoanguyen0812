@@ -226,6 +226,8 @@ New_plot
 
 Which of these two sets of plots do you find easier to interpret?
 
+ > the individual graphs in part 1 seem to be a lot easier to interpret as it is not crowded with information that leads to information overload.
+
 
 ## Part 3: Proportion of reviews mentioning "no scent"
 
