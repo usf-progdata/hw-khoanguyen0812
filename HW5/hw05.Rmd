@@ -5,10 +5,6 @@ date: "3/22/2021"
 output:
   html_document:
     theme: journal
-    highlight: zenburn
-    code_folding: show
-    toc: true
-    toc_depth: 5
   github_document: default
 ---
 
@@ -106,7 +102,8 @@ Plot_Adj_Scent_Data <- Adjusted_Scented_Data %>%
     xintercept = as.numeric(
       as.Date(
         "2020-01-20")),
-    linetype = "dashed", color = "green") +
+    linetype = "dashed",
+    color = "green") +
   scale_y_continuous(
     name = "Average Rating") +
   theme_classic() +
@@ -155,7 +152,8 @@ Plot_Adj_Unscent_Data <- Adjusted_Unscented_Data %>%
     xintercept = as.numeric(
       as.Date(
         "2020-01-20")),
-    linetype = "dashed", color = "green") +
+    linetype = "dashed",
+    color = "green") +
   scale_y_continuous(
     name = "Average Rating") +
   theme_classic() +
@@ -170,7 +168,7 @@ Plot_Adj_Unscent_Data
 ```
 
 ```{r}
-Plot_Adj_Scent_Data + Plot_Adj_Unscent_Data
+grid.arrange(Plot_Adj_Scent_Data, Plot_Adj_Unscent_Data, ncol = 2)
 ```
 
 > Both graphs consistently indicated a high review meaning that the quality produced by these different companies are consistent and reliable, yet, we observed a sudden and significant decrease in ratings for both scented and unscented starting on January of 2020. THis could be due to the symptoms of COVID as we can see the ratings for scented candles significantly decreases near April of 2020 (when the lock-down occured, and when COVID was recognized as a global pandemic). One of the symptoms mentioned in the diagnosis of COVID is the lost in the intricate ability to smell things correctly. This could explain why there is a sharp decrease in people's ability to enjoy the candles' smell and choose to rate them horribly despite the scented candles' track record indicated that every one liked them up until a few weeks before the lock-down occured from COVID. Another possiblity is because the scented candles could be produced by factories in China, which is where COVID originated from, it leads to a drastic decrease in production and the quality of the candles production relative to the demand. This of course means that workers are even more overworked and underpaid to procure these scented candles which leads to mishaps and low-quality scented candles. Again, these are assumptions made to explain the significant drop in ratings amongst the scented candles based on some inference knowledge that a lot of companies such as Nike, Apples, Adidas, Microsoft, etc. have their products made in China's factories and workshop as it is a lot cheaper in terms of labor than here in the States. Information on this matter can be provided upon request.
@@ -181,16 +179,49 @@ Plot_Adj_Scent_Data + Plot_Adj_Unscent_Data
 Combine the two datasets into one and make a plot similar to above, but showing both unscented and scented candles.
 Distinguish scented versus unscented candles using color, shape, and line type (for the trend lines).
 
-```{r combine datasets, eval=FALSE}
+```{r combine datasets}
 candles_full <- bind_rows(
-	scented = candeles_scented, 
-	unscented = candeles_unscented, 
+	scented = Adjusted_Scented_Data, 
+	unscented = Adjusted_Unscented_Data, 
 	.id = "Scented"
 )
 ```
 
 ```{r}
+New_plot <- candles_full %>% 
+  filter(Date > "2017-01-01") %>%
+  group_by(Date, Scented) %>% 
+  mutate(mean_rat_comb = mean(Rating)) %>% 
+  ggplot(
+    aes(x = Date,
+        y = mean_rat_comb,
+        shape = Scented,
+        color = Scented,
+        fill = Scented
+  )) + 
+  geom_point(alpha = .5,
+             shape = 5,
+             ) +
+  scale_x_date(
+    name = "Date", 
+    date_breaks = "6 months", 
+    date_labels = "%m-%Y") +
+  geom_smooth(method = "loess") +
+  geom_vline(xintercept = as.numeric(
+    as.Date("2020-01-20")), 
+    linetype = "dashed",
+    color = "red") +
+  scale_y_continuous(
+    name = "Average Rating") +
+  theme_classic() +
+  ggtitle("Avg. Candle Review Comparison Scented and Unscented Chart") + 
+  guides(
+    x = guide_axis(
+      n.dodge = 2)) + 
+  scale_color_brewer(
+    palette = "Dark2")
 
+New_plot
 ```
 
 Which of these two sets of plots do you find easier to interpret?
