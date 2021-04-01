@@ -1,0 +1,306 @@
+---
+title: "Consequences of Covid-19 for Candle Critiques"
+author: "Khoa Nguyen"
+date: "3/22/2021"
+output:
+  html_document:
+    theme: journal
+  github_document: default
+---
+
+For this assignment, you will produce a report exploring the impact of Covid-19 on scented candle ratings.
+
+Write this assignment like a report.
+You should describe the dataset, show appropriate plots, and interpret them.
+Remove the instruction text from this document.
+
+In your report, fold the code blocks, enable code highlighting, and set an HTML theme of your choice.
+Set other document options as you prefer and as appropriate.
+
+
+## The data
+
+You will work with two datasets `Scented_all.xlsx` and `Unscented_all.xlsx`.
+Each dataset contains the following information for the Top 3 selling scented or unscented candles sold on Amazon:
+  
+  1. `CandleID`: A numeric id variable for candle 1-3 in each category.
+  2. `Date`: The date of the review.
+  3. `Rating`: The 1-5 rating for the review.
+  4. `Review`: For the scented candles, the text of the review.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+library(patchwork)
+library(readxl)
+library(gridExtra)
+library(colorspace)
+library(misc3d)
+```
+
+```{r}
+Scented_Data <- read_excel(here::here("HW5", "Scented_all.xlsx"))
+Unscented_Data <- read_excel(here::here("hw5", "Unscented_all.xlsx"))
+```
+
+
+## Part 1: Average daily ratings for scented and unscented candles
+
+For each category of candle (scented versus unscented), for all days from **2017-01-01** onward, create a plot showing:
+
+  1. Date on the x axis
+    1. Hint: use `scale_x_date()`
+    2. Format the date labels as `"%m-%Y"`
+    3. Set the date breaks to be "6 months"
+  2. **Average daily rating** of each candle on the y axis
+  3. A smooth trend line (not linear; `method = "loess"`)
+  4. A dashed vertical line at January 01, 2020
+    1. Hint: use `geom_vline()` and set `xintercept = as.numeric(as.Date("2020-01-20"))`
+    
+Be sure to make the plots beautiful.
+
+  1. Address overplotting of points using transparency or shapes.
+  2. Use an appealing theme and color scheme.
+  3. Set appropriately formatted axis titles and main plot title.
+  4. Place the two plots side by side.
+  
+Note: The raw data are **individual reviews** so you will need to compute summary results to get average daily ratings for the desired date range.
+
+Interpret these graphs.
+What do they show about scented candles over the time period?
+
+```{r}
+Adjusted_Scented_Data <- Scented_Data %>% 
+  mutate(CandleID = as.factor(CandleID),
+         Date = as.Date(Date))
+
+Plot_Adj_Scent_Data <- Adjusted_Scented_Data %>% 
+  filter(Date > "2017-01-01") %>% 
+  group_by(Date) %>% 
+  mutate(
+    mean_rate = mean(Rating) 
+  ) %>% 
+  ggplot(
+    aes(x = Date,
+        y = mean_rate,
+        shape = CandleID,
+        color = CandleID,
+        fill = CandleID
+        )
+    ) +
+  geom_point(
+    alpha = .5,
+    shape = 1) +
+  scale_x_date(
+    name = "Date", 
+               date_breaks = "6 months",
+               date_labels = "%m-%Y"
+    ) +
+  geom_smooth(
+    method = "loess"
+    ) +
+  geom_vline(
+    xintercept = as.numeric(
+      as.Date(
+        "2020-01-20")),
+    linetype = "dashed",
+    color = "green") +
+  scale_y_continuous(
+    name = "Average Rating") +
+  theme_classic() +
+  ggtitle("Average Scented Candle Comparison Graph") + 
+  guides(
+    x = guide_axis(
+      n.dodge = 2)) +
+  scale_color_brewer(
+    palette = "Dark2")
+
+Plot_Adj_Scent_Data
+```
+
+```{r}
+Adjusted_Unscented_Data <- Unscented_Data %>% 
+  mutate(
+    CandleID = as.factor(CandleID),
+         Date = as.Date(Date))
+
+Plot_Adj_Unscent_Data <- Adjusted_Unscented_Data %>% 
+  filter(Date > "2017-01-01") %>% 
+  group_by(Date) %>% 
+  mutate(
+    mean_rate = mean(Rating) 
+  ) %>% 
+  ggplot(
+    aes(x = Date,
+        y = mean_rate,
+        shape = CandleID,
+        color = CandleID,
+        fill = CandleID
+        )
+    ) +
+  geom_point(
+    alpha = .5,
+    shape = 1) +
+  scale_x_date(
+    name = "Date", 
+               date_breaks = "6 months",
+               date_labels = "%m-%Y"
+    ) +
+  geom_smooth(
+    method = "loess"
+    ) +
+  geom_vline(
+    xintercept = as.numeric(
+      as.Date(
+        "2020-01-20")),
+    linetype = "dashed",
+    color = "green") +
+  scale_y_continuous(
+    name = "Average Rating") +
+  theme_classic() +
+  ggtitle("Average Unscented Candle Comparison Graph") + 
+  guides(
+    x = guide_axis(
+      n.dodge = 2)) +
+  scale_color_brewer(
+    palette = "Dark2")
+
+Plot_Adj_Unscent_Data
+```
+
+```{r}
+grid.arrange(Plot_Adj_Scent_Data, Plot_Adj_Unscent_Data, ncol = 2)
+```
+
+> Both graphs consistently indicated a high review meaning that the quality produced by these different companies are consistent and reliable, yet, we observed a sudden and significant decrease in ratings for both scented and unscented starting on January of 2020. THis could be due to the symptoms of COVID as we can see the ratings for scented candles significantly decreases near April of 2020 (when the lock-down occured, and when COVID was recognized as a global pandemic). One of the symptoms mentioned in the diagnosis of COVID is the lost in the intricate ability to smell things correctly. This could explain why there is a sharp decrease in people's ability to enjoy the candles' smell and choose to rate them horribly despite the scented candles' track record indicated that every one liked them up until a few weeks before the lock-down occured from COVID. Another possiblity is because the scented candles could be produced by factories in China, which is where COVID originated from, it leads to a drastic decrease in production and the quality of the candles production relative to the demand. This of course means that workers are even more overworked and underpaid to procure these scented candles which leads to mishaps and low-quality scented candles. Again, these are assumptions made to explain the significant drop in ratings amongst the scented candles based on some inference knowledge that a lot of companies such as Nike, Apples, Adidas, Microsoft, etc. have their products made in China's factories and workshop as it is a lot cheaper in terms of labor than here in the States. Information on this matter can be provided upon request.
+
+
+## Part 2: Combined plot
+
+Combine the two datasets into one and make a plot similar to above, but showing both unscented and scented candles.
+Distinguish scented versus unscented candles using color, shape, and line type (for the trend lines).
+
+```{r combine datasets}
+candles_full <- bind_rows(
+	scented = Adjusted_Scented_Data, 
+	unscented = Adjusted_Unscented_Data, 
+	.id = "Scented"
+)
+```
+
+```{r}
+New_plot <- candles_full %>% 
+  filter(Date > "2017-01-01") %>%
+  group_by(Date, Scented) %>% 
+  mutate(mean_rat_comb = mean(Rating)) %>% 
+  ggplot(
+    aes(x = Date,
+        y = mean_rat_comb,
+        shape = Scented,
+        color = Scented,
+        fill = Scented
+  )) + 
+  geom_point(alpha = .5,
+             shape = 5,
+             ) +
+  scale_x_date(
+    name = "Date", 
+    date_breaks = "6 months", 
+    date_labels = "%m-%Y") +
+  geom_smooth(method = "loess") +
+  geom_vline(xintercept = as.numeric(
+    as.Date("2020-01-20")), 
+    linetype = "dashed",
+    color = "red") +
+  scale_y_continuous(
+    name = "Average Rating") +
+  theme_classic() +
+  ggtitle("Avg. Candle Review Comparison Scented and Unscented Chart") + 
+  guides(
+    x = guide_axis(
+      n.dodge = 2)) + 
+  scale_color_brewer(
+    palette = "Dark2")
+
+New_plot
+```
+
+Which of these two sets of plots do you find easier to interpret?
+
+ > the individual graphs in part 1 seem to be a lot easier to interpret as it is not crowded with information that leads to information overload.But if a comparison is the main purpose here, having the combined graph is actually more useful as we can clearly see the current status of each type of candles and compare them to the others. It is also a lot easier to determine and predict future ratings based on the overlapping ratings for each type of candles on different date leading up to the drop and the post-drop in ratings.
+
+
+## Part 3: Proportion of reviews mentioning "no scent"
+
+Use the scented candles database and make one more plot showing:
+
+  1. For **each month in 2019 and 2020**, 
+  2. On the x axis, month and year
+  3. On the y axis, the **proportion of reviews** mentioning that the scented candles have no smell
+    - Include both the mean (proportion) and a 95% confidence interval
+  4. Color the symbols by year (2019 vs 2020)
+
+As before, make the 
+
+Hints:
+
+  1. To round each date to its months, use:
+    - `mutate(month = lubridate::floor_date(Date, "month"))`
+  2. To compute a mean and confidence interval for a variable on a plot, similar to a box plot, use:
+    - `stat_summary(aes(y = noscent), fun.data = mean_cl_normal)`
+  3. Use the function below to detect "no smell"-related text in the `Review` column.
+
+```{r no scent function, include=FALSE}
+str_no_scent <- function(x){
+  as.numeric(
+  	case_when(
+  		str_detect(x, "[Nn]o scent") ~ "1", 
+  		str_detect(x, "[Nn]o smell") ~ "1",
+  		str_detect(x, "[Dd]oes not smell like") ~ "1",
+  		str_detect(x, "[Dd]oesn't smell like") ~ "1",
+  		str_detect(x, "[Cc]an't smell") ~ "1",
+  		str_detect(x, "[Cc]annot smell") ~ "1",
+  		str_detect(x, "[Ff]aint smell") ~ "1",
+  		str_detect(x, "[Ff]aint scent") ~ "1",
+  		str_detect(x, "[Dd]on't smell") ~ "1",
+  		str_detect(x, "[Ll]ike nothing") ~ "1",
+  		TRUE ~ "0"
+  	)
+  )
+}
+```
+
+> *I don't know what I am doing....*
+
+```{r}
+Scented_Data$CodeReview <- str_no_scent(Scented_Data$Review)
+Scented_Data$CodeReview_1 <- factor(Scented_Data$CodeReview, labels = c("scent", "noscent"))
+ 
+print(Scented_Data)
+```
+
+```{r}
+What_scent <- Scented_Data %>%
+  filter(Date > "2019-01-01") %>%
+  mutate(month = lubridate::floor_date(Date, "month")) %>%
+  group_by(month, CodeReview_1) %>%
+    ggplot(aes(x = month, y = (..count..)/sum(..count..))) +
+     geom_bar(position = "dodge") +
+  stat_summary(aes(y = CodeReview_1), fun.data = mean_cl_normal)
+
+What_scent
+```
+
+
+What pattern do you see?
+
+> There is a significant increase in ratings of the scented candles claiming that the scented candles are not producing any smell despite the fact that they are scented candles.
+
+Is there a trend over time regarding smell-related reviews? 
+
+> There is an increasing trend but seem to fluctuates a bit.
+
+How does 2020 compare to 2019?
+
+> 2020 seem to have more increase reviews of such issue (I think).
