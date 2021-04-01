@@ -29,12 +29,14 @@ Each dataset contains the following information for the Top 3 selling scented or
   4. `Review`: For the scented candles, the text of the review.
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readr)
 library(patchwork)
 library(readxl)
 library(gridExtra)
 library(colorspace)
+library(misc3d)
 ```
 
 ```{r}
@@ -226,7 +228,7 @@ New_plot
 
 Which of these two sets of plots do you find easier to interpret?
 
- > the individual graphs in part 1 seem to be a lot easier to interpret as it is not crowded with information that leads to information overload.
+ > the individual graphs in part 1 seem to be a lot easier to interpret as it is not crowded with information that leads to information overload.But if a comparison is the main purpose here, having the combined graph is actually more useful as we can clearly see the current status of each type of candles and compare them to the others. It is also a lot easier to determine and predict future ratings based on the overlapping ratings for each type of candles on different date leading up to the drop and the post-drop in ratings.
 
 
 ## Part 3: Proportion of reviews mentioning "no scent"
@@ -272,9 +274,33 @@ str_no_scent <- function(x){
 > *I don't know what I am doing....*
 
 ```{r}
-
+Scented_Data$CodeReview <- str_no_scent(Scented_Data$Review)
+Scented_Data$CodeReview_1 <- factor(Scented_Data$CodeReview, labels = c("scent", "noscent"))
+ 
+print(Scented_Data)
 ```
 
+```{r}
+What_scent <- Scented_Data %>%
+  filter(Date > "2019-01-01") %>%
+  mutate(month = lubridate::floor_date(Date, "month")) %>%
+  group_by(month, CodeReview_1) %>%
+    ggplot(aes(x = month, y = (..count..)/sum(..count..))) +
+     geom_bar(position = "dodge") +
+  stat_summary(aes(y = CodeReview_1), fun.data = mean_cl_normal)
+
+What_scent
+```
+
+
 What pattern do you see?
+
+> There is a significant increase in ratings of the scented candles claiming that the scented candles are not producing any smell despite the fact that they are scented candles.
+
 Is there a trend over time regarding smell-related reviews? 
+
+> There is an increasing trend but seem to fluctuates a bit.
+
 How does 2020 compare to 2019?
+
+> 2020 seem to have more increase reviews of such issue (I think).
