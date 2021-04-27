@@ -563,3 +563,5 @@ print(pomp_summ_table)
 
   
 In your assignment, prepare an RMarkdown file that includes both the coding and (for 4-7) narrative descriptions of your results.
+
+
