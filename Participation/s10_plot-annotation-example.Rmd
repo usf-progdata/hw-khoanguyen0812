@@ -31,7 +31,14 @@ First, we load the libraries we'll be using:
 library(tidyverse)  # For ggplot, dplyr, and friends
 library(ggrepel)    # For non-overlapping labels
 library(ggtext)     # For fancier text handling
+library(readr)
 ```
+
+```{r}
+read.csv(here::here)
+```
+
+
 
 ```{r get-wdi-from-package, eval=FALSE}
 # This is an example of how to pull data from the WDI package.

@@ -14,6 +14,7 @@ library(tidyverse)
 library(here)
 library(tidyr)
 library(dplyr)
+library(readr)
 ```
 
 
@@ -27,21 +28,18 @@ url <- "https://raw.githubusercontent.com/USF-Psych-DataSci/Classroom/master/dat
 ```
 
 ```{r}
-beer <- read_csv(url)
-print(beer)
+if(!dir.exists(here::here("Participation", "data"))){dir.create(here::here("Participation", "Data"))
+  recursive = TRUE}
 ```
 
 ```{r}
-write_csv(beer,
-          here::here("Participation", "Data", "Beer.csv"))
+read_csv(url, here::here("Participation", "Data", "beer.csv"),
+         na = c("NA", " ", "-999"))
 ```
 
 ```{r}
-write_csv(url, 
-          here::here("Participation", "data", "beer.csv"),
-          na)
-```
 
+```
 
 >>>>>>> Stashed changes
 The dataset contains 3 variables:
