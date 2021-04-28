@@ -13,6 +13,7 @@ library(tidyverse)
 library(readr)
 library(ggdist)
 library(svglite)
+library(correlation)
 ```
 
 ```{r}
@@ -66,6 +67,45 @@ read.csv(
 Summarizing data and observing the marriage trend.
 
 ```{r}
+
+```
+
+```{r}
+sum_calculating <- function(.data, variables) {
+  descriptives <- .data %>%
+    summarize(across(all_of(variables)), list( mean = mean, sd = sd, min = min, max= max), na.rm = TRUE) %>% 
+    pivot_longer(cols = everything(), names_to = c("Education", ".value"), names_sep = "_")
+
+  corr <- .data %>% 
+    correlation::correlation(select = variables) %>% 
+    summary()
+
+  tab <- full_join(
+    descriptives,
+    corr,
+    by = c("year", "date"
+  ))
+  
+  return(tab)
+}
+
+men_ed_data <- men_data %>%
+  group_by(year)
+
+women_ed_data <- women_data %>% 
+  group_by(year)
+
+education_level <- c("HS_2534", "SC_2534", "BAp_2534", "BAo_2534", "GD_2534")
+
+table_men <- sum_calculating(men_ed_data, education_level)
+table_women <-  sum_calculating(women_ed_data, education_level)
+
+table_men
+table_women
+
+```
+
+```{r}
 sum_for_both_gend <- both_gender %>% 
   group_by(year) %>% 
   summarize(across(c(HS_2534:BAo_2534),
@@ -76,6 +116,13 @@ sum_for_both_gend <- both_gender %>%
 sum_for_both_gend
 write.csv(sum_for_both_gend,
           here::here("Final_project", "output", "Sum_both_gend.csv"))
+```
+
+```{r}
+sum_for_both_gend %>% 
+  correlation::correlation(select = c("BAo_2534_mean", "BAp_2534_mean", "SC_2534_mean", "HS_2534_mean")) %>% 
+  summary()
+  
 ```
 
 ```{r}
