@@ -13,117 +13,168 @@ library(tidyverse)
 library(readr)
 library(ggdist)
 library(svglite)
+library(correlation)
+library(splitstackshape)
 ```
 
 ```{r}
-if (!dir.exists(here::here("Final_project", "data_raw"))) {
-  dir.create(here::here("Final_project", "data_raw", "output", ".R"), recursive = TRUE)
+if ( !dir.exists( here::here("Final_project", "data_raw") ) ) {
+  dir.create( here::here("Final_project", "data_raw", "output", ".R"), recursive = TRUE )
 }
 ```
+
+
 
 ```{r}
 url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/divorce.csv"
 bothsexes <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/both_sexes.csv"
 men <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/men.csv"
-women <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/women.csv"
+women <-  "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/women.csv"
 ```
 
 ```{r}
 Major_data <- read.csv(url,
-  na = c("NA", " ", "-999")
-)
-both_gender <- read.csv(bothsexes,
-  na = c("NA", " ", "-999")
-)
-men_data <- read.csv(men,
-  na = c("NA", " ", "-999")
-)
-women_data <- read.csv(women,
-  na = c("NA", " ", "-999")
-)
+                       na = c("NA", " ", "-999"))
+both_gender <-  read.csv(bothsexes,
+                       na = c("NA", " ", "-999"))
+men_data <-  read.csv(men,
+                       na = c("NA", " ", "-999"))
+women_data <-  read.csv(women,
+                       na = c("NA", " ", "-999"))
 ```
 
 ```{r}
-write.csv(
-  Major_data,
-  here::here("Final_project", "data_raw", "Major_data.csv")
-)
-write.csv(
-  both_gender,
-  here::here("Final_project", "data_raw", "Both_gender.csv")
-)
-write.csv(
-  men_data,
-  here::here("Final_project", "data_raw", "Men_data.csv")
-)
-write.csv(
-  women_data,
-  here::here("Final_project", "data_raw", "Women_data.csv")
-)
+write.csv(Major_data,
+          here::here("Final_project", "data_raw", "Major_data.csv"))
+write.csv(both_gender,
+          here::here("Final_project", "data_raw", "Both_gender.csv"))
+write.csv(men_data,
+          here::here("Final_project", "data_raw", "Men_data.csv"))
+write.csv(women_data,
+          here::here("Final_project", "data_raw", "Women_data.csv"))
 ```
 
 ```{r}
 read.csv(
-  here::here("Final_Project", "data_raw", "Major_data.csv")
-)
+  here::here("Final_Project", "data_raw", "Major_data.csv"))
 read.csv(
-  here::here("Final_Project", "data_raw", "Both_gender.csv")
-)
+  here::here("Final_Project", "data_raw", "Both_gender.csv"))
 read.csv(
-  here::here("Final_Project", "data_raw", "Men_data.csv")
-)
+  here::here("Final_Project", "data_raw", "Men_data.csv"))
 read.csv(
-  here::here("Final_Project", "data_raw", "Women_data.csv")
-)
+  here::here("Final_Project", "data_raw", "Women_data.csv"))
 ```
 
 Summarizing data and observing the marriage trend.
 
 ```{r}
-sum_for_both_gend <- both_gender %>%
-  group_by(year) %>%
-  summarize(across(
-    c(HS_2534:BAo_2534),
-    list(
-      mean = ~ mean(.x, na.rm = TRUE),
-      sd = ~ sd(.x, na.rm = TRUE),
-      min = ~ min(.x, na.rm = TRUE),
-      max = ~ max(.x, na.rm = TRUE)
-    )
-  ))
 
-sum_for_both_gend
+m <- men_data %>%
+  select(year, starts_with("HS_")) 
 
-write.csv(
-  sum_for_both_gend,
-  here::here("Final_project", "output", "Sum_both_gend.csv")
+m_long <- m %>% pivot_longer(
+  cols = -year,
+  names_sep = "_",
+  names_to = c("edu", "age"),
+  values_to = "rate"
 )
+
+
+m_plot <- m_long %>% 
+  ggplot(aes(x=year,y=rate, color = age)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men.")
+
+m_plot
+```
+
+```{r}
+ggsave(here::here("Final_project", "output", "figure",
+                  "Marriage Trend Amongst Different Age Group Over Time for Men.svg"),
+       m_plot,
+       height = 6,
+       width = 6)
+```
+
+
+
+```{r}
+sum_calculating <- function(.data, variables) {
+  
+  
+  descriptives <- .data %>%
+    summarize(across(all_of(variables)), list( mean = mean, sd = sd, min = min, max= max), na.rm = TRUE) %>% 
+    pivot_longer(cols = everything(), names_to = c("Education", ".value"), names_sep = "_")
+
+  corr <- .data %>% 
+    correlation::correlation(select = variables) %>% 
+    summary()
+
+  
+  
+    
+  tab <- full_join(
+    descriptives,
+    corr,
+    by = c("year", "date"
+  ))
+  
+  return(tab)
+}
+
+men_ed_data <- men_data %>%
+  group_by(year)
+
+women_ed_data <- women_data %>% 
+  group_by(year)
+
+education_level <- c("HS_2534", "SC_2534", "BAp_2534", "BAo_2534", "GD_2534")
+
+table_men <- sum_calculating(men_ed_data, education_level)
+table_women <-  sum_calculating(women_ed_data, education_level)
+
+table_men
+table_women
+
+```
+
+```{r}
+sum_for_both_gend <- both_gender %>% 
+  group_by(year) %>% 
+  summarize(across(c(HS_2534:BAo_2534),
+                      list(mean = ~ mean(.x, na.rm= TRUE),
+                sd = ~ sd(.x, na.rm = TRUE),
+                min = ~ min(.x, na.rm = TRUE),
+                max = ~ max(.x, na.rm = TRUE))))
+sum_for_both_gend
+write.csv(sum_for_both_gend,
+          here::here("Final_project", "output", "Sum_both_gend.csv"))
+```
+
+```{r}
+sum_for_both_gend %>% 
+  correlation::correlation(select = c("BAo_2534_mean", "BAp_2534_mean", "SC_2534_mean", "HS_2534_mean")) %>% 
+  summary()
+  
 ```
 
 ```{r}
 tibble_both_gender <- as.tibble(both_gender)
-
-tibble_both_gender
-
-write.csv(
-  tibble_both_gender,
-  here::here("Final_project", "data", "tibble_both_gender.csv")
-)
+print(tibble_both_gender)
+write.csv(tibble_both_gender, 
+          here::here("Final_project", "data", "tibble_both_gender.csv"))
 ```
 
 Bachelor Degree or higher:
 ```{r}
 tibble_both_gender_output1 <- tibble_both_gender %>%
-  select(year, date, BAp_2534) %>%
+  select(year, date, BAp_2534) %>% 
   group_by(year) %>%
   filter(BAp_2534 == max(BAp_2534))
-
 tibble_both_gender_output1
-
-write.csv(
-  tibble_both_gender_output1,
-  here::here("Final_project", "output", "Max_change_in_years_for_higher_education.csv")
-)
+write.csv(tibble_both_gender_output1,
+          here::here("Final_project", "output", "Max_change_in_years_for_higher_education.csv"))
 ```
 
 As we can see here, the maximum marriage population for people with higher level of education seems to increase over time. This of course is just one variable.
@@ -131,37 +182,25 @@ As we can see here, the maximum marriage population for people with higher level
 Now, let's look at divorce rate among the population throughout the year by education.
 
 ```{r}
-Divorce_sum <- Major_data %>%
-  summarize(across(
-    c(HS_3544:BAp_3544),
-    list(
-      mean = ~ mean(.x, na.rm = TRUE),
-      sd = ~ sd(.x, na.rm = TRUE),
-      min = ~ min(.x, na.rm = TRUE),
-      max = ~ max(.x, na.rm = TRUE)
-    )
-  ))
-
+Divorce_sum <- Major_data %>% 
+  summarize(across(c(HS_3544:BAp_3544),
+                      list(mean = ~ mean(.x, na.rm= TRUE),
+                sd = ~ sd(.x, na.rm = TRUE),
+                min = ~ min(.x, na.rm = TRUE),
+                max = ~ max(.x, na.rm = TRUE))))
 Divorce_sum
-
-write.csv(
-  Divorce_sum,
-  here::here("Final_project", "output", "Divorce_sum.csv")
-)
+write.csv(Divorce_sum,
+          here::here("Final_project", "output", "Divorce_sum.csv"))
 ```
 
 ```{r}
 Divorce_trend_output <- Major_data %>%
-  select(year, date, BAp_3544) %>%
+  select(year, date, BAp_3544) %>% 
   group_by(year) %>%
   filter(BAp_3544 == max(BAp_3544))
-
 Divorce_trend_output
-
-write.csv(
-  Divorce_trend_output,
-  here::here("Final_project", "output", "Divorce_trend_output.csv")
-)
+write.csv(Divorce_trend_output,
+          here::here("Final_project", "output", "Divorce_trend_output.csv"))
 ```
 
 As indicated within the data for population that are 35 to 44 years of age, and has a college degree or higher, the trend for divorce rate seems to be increasing by the years when looking at their highest divorce rate for the years (slightly decreasing starting to see significant decreasing in the early 2000s).
@@ -171,15 +210,15 @@ Now, let's look at some graphs for the marriage rate versus divorce rate.
 I first had to extract out the exact data I want to look at from the divorce dataset and compare it with the marriage one.
 
 ```{r}
-Divorce_BAp_3544_Data1 <- Major_data %>%
-  mutate(Divorce_BAp_3544 = BAp_3544) %>%
+Divorce_BAp_3544_Data1 <- Major_data %>% 
+  mutate(Divorce_BAp_3544 = BAp_3544) %>% 
   select(Divorce_BAp_3544)
 Divorce_BAp_3544_Data1
 ```
 
 ```{r}
-Marriage_BAp_3544_Data1 <- both_gender %>%
-  mutate(Marriage_BAp_3544 = BAp_3544) %>%
+Marriage_BAp_3544_Data1 <- both_gender %>% 
+  mutate(Marriage_BAp_3544 = BAp_3544) %>% 
   select(Marriage_BAp_3544)
 Marriage_BAp_3544_Data1
 ```
@@ -193,9 +232,9 @@ cbind_BAp_3544_Compar_Data
 ```
 
 ```{r}
-Rainfall_graph_for_marriage_and_divorce <- cbind_BAp_3544_Compar_Data %>%
-  drop_na(c(Marriage_BAp_3544:Divorce_BAp_3544)) %>%
-  ggplot() +
+Rainfall_graph_for_marriage_and_divorce <- cbind_BAp_3544_Compar_Data %>% 
+  drop_na(c(Marriage_BAp_3544:Divorce_BAp_3544)) %>% 
+  ggplot +
   aes(
     x = Marriage_BAp_3544,
     y = Divorce_BAp_3544,
@@ -220,28 +259,21 @@ Rainfall_graph_for_marriage_and_divorce <- cbind_BAp_3544_Compar_Data %>%
     position = position_nudge(y = .2)
   ) +
   theme_classic() +
-  # WDG: A title is very important when it comes to graphs. Try and answer the question: "What am I looking at?" when thinking of a title. Try and be descriptive.
-  labs(
-    title = "Comparative Data",
-    y = NULL,
-    x = "BAp_3544"
-  ) +
+  labs(title = "Comparative Data",
+       y = NULL,
+       x = "BAp_3544"
+       ) +
   theme(plot.title.position = "plot") +
   guides(color = guide_none(), fill = guide_none())
 Rainfall_graph_for_marriage_and_divorce
 ```
 
 ```{r}
-ggsave(here::here(
-  "Final_project", "output", "figure",
-  "Rainfall_graph_for_marriage_and_divorce.svg"
-),
-Rainfall_graph_for_marriage_and_divorce,
-height = 6,
-width = 6
-)
+ggsave(here::here("Final_project", "output", "figure",
+                  "Rainfall_graph_for_marriage_and_divorce.svg"),
+       Rainfall_graph_for_marriage_and_divorce,
+       height = 6,
+       width = 6)
 ```
 
 Oh god. This is an abomination. Okay, nothing to see here. Let's go back to regular graph.
-
-<!-- WDG: Lol --->
