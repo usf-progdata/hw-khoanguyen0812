@@ -14,6 +14,7 @@ library(readr)
 library(ggdist)
 library(svglite)
 library(correlation)
+library(splitstackshape)
 ```
 
 ```{r}
@@ -68,10 +69,40 @@ Summarizing data and observing the marriage trend.
 
 ```{r}
 
+m <- men_data %>%
+  select(year, starts_with("HS_")) 
+
+m_long <- m %>% pivot_longer(
+  cols = -year,
+  names_sep = "_",
+  names_to = c("edu", "age"),
+  values_to = "rate"
+)
+
+
+m_plot <- m_long %>% 
+  ggplot(aes(x=year,y=rate, color = age)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men.")
+
+m_plot
 ```
 
 ```{r}
+ggsave(here::here("Final_project", "output", "figure",
+                  "Marriage Trend Amongst Different Age Group Over Time for Men.svg"),
+       m_plot,
+       height = 6,
+       width = 6)
+```
+
+
+
+```{r}
 sum_calculating <- function(.data, variables) {
+  
+  
   descriptives <- .data %>%
     summarize(across(all_of(variables)), list( mean = mean, sd = sd, min = min, max= max), na.rm = TRUE) %>% 
     pivot_longer(cols = everything(), names_to = c("Education", ".value"), names_sep = "_")
@@ -80,6 +111,9 @@ sum_calculating <- function(.data, variables) {
     correlation::correlation(select = variables) %>% 
     summary()
 
+  
+  
+    
   tab <- full_join(
     descriptives,
     corr,
