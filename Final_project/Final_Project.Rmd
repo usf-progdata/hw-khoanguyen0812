@@ -15,6 +15,7 @@ library(ggdist)
 library(svglite)
 library(correlation)
 library(splitstackshape)
+library(patchwork)
 ```
 
 ```{r}
@@ -65,8 +66,8 @@ read.csv(
   here::here("Final_Project", "data_raw", "Women_data.csv"))
 ```
 
-Summarizing data and observing the marriage trend.
-
+## Summarizing data and observing the marriage trend.
+### Men Marriage Trend Data.
 ```{r}
 
 m <- men_data %>%
@@ -89,10 +90,50 @@ m_plot <- m_long %>%
 m_plot
 ```
 
+### women Marriage Data by.
+```{r}
+
+w <- women_data %>%
+  select(year, starts_with("HS_")) 
+
+w_long <- w %>% pivot_longer(
+  cols = -year,
+  names_sep = "_",
+  names_to = c("edu", "age"),
+  values_to = "rate"
+)
+
+
+w_plot <- w_long %>% 
+  ggplot(aes(x=year,y=rate, color = age)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Women.")
+
+w_plot
+```
+
+## Comapring graphs of marriage trend for both genders.
+
+```{r}
+combined_w_m_plot <- m_plot + w_plot
+combined_w_m_plot
+```
+
 ```{r}
 ggsave(here::here("Final_project", "output", "figure",
                   "Marriage Trend Amongst Different Age Group Over Time for Men.svg"),
        m_plot,
+       height = 6,
+       width = 6)
+ggsave(here::here("Final_project", "output", "figure",
+                  "Marriage Trend Amongst Different Age Group Over Time for Women.svg"),
+       w_plot,
+       height = 6,
+       width = 6)
+ggsave(here::here("Final_project", "output", "figure",
+                  "Marriage Trend Amongst Different Age Group Over Time for both gender.svg"),
+       combined_w_m_plot,
        height = 6,
        width = 6)
 ```
