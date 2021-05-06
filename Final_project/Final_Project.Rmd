@@ -24,6 +24,9 @@ if ( !dir.exists( here::here("Final_project", "data_raw") ) ) {
 }
 ```
 
+# Divorce rate trend and Marriage Rate Trend Comparison.
+## Research Questions.
+> Is the differences between the marriage trend and dicorve trend throughout the years significant enough for us to reconsider what is the criteria for a committed marriage? This is also a follow-up to the original study.
 
 
 ```{r}
@@ -165,7 +168,14 @@ bg_plot
 ```
 
 ```{r}
-m_plot + w_plot + bg_plot
+main_compared_data <- m_plot + w_plot + bg_plot
+main_compared_data
+
+ggsave(here::here("Final_project", "output", "figure",
+                  "Comparison of Marriage Trend for Men and Women versus Combined.svg"),
+       main_compared_data,
+       height = 6,
+       width = 6)
 ```
 
 ## Data summary of both gender for individuals with a high school diploma or less.
