@@ -134,13 +134,13 @@ ggsave(here::here("Final_project", "output", "figure",
 ggsave(here::here("Final_project", "output", "figure",
                   "Marriage Trend Amongst Different Age Group Over Time for Women.svg"),
        w_plot,
-       height = 6,
-       width = 6)
+       height = 10,
+       width = 10)
 ggsave(here::here("Final_project", "output", "figure",
                   "Marriage Trend Amongst Different Age Group Over Time for both gender.svg"),
        combined_w_m_plot,
-       height = 6,
-       width = 6)
+       height = 12,
+       width = 12)
 ```
 
 
