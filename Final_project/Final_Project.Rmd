@@ -66,10 +66,13 @@ read.csv(
   here::here("Final_Project", "data_raw", "Women_data.csv"))
 ```
 
-## Summarizing data and observing the marriage trend.
-### Men Marriage Trend Data.
-```{r}
+> Our main objective for this project is to perform a follow-up study to examine the trend of marriage across education level for both gender across time, along with measurint it against the divorce rate trend.
 
+## Summarizing data and observing the marriage trend for Individuals with a High School Diploma or Less.
+### Men Marriage Trend Data for individuals with only a high school diploma and less.
+
+
+```{r}
 m <- men_data %>%
   select(year, starts_with("HS_")) 
 
@@ -90,9 +93,8 @@ m_plot <- m_long %>%
 m_plot
 ```
 
-### women Marriage Data by.
+### women Marriage Data for individuals with only a high school diploma and less.
 ```{r}
-
 w <- women_data %>%
   select(year, starts_with("HS_")) 
 
@@ -113,7 +115,7 @@ w_plot <- w_long %>%
 w_plot
 ```
 
-## Comapring graphs of marriage trend for both genders.
+## Comapring graphs of marriage trend for men and women who only have a high school diploma or less.
 
 ```{r}
 combined_w_m_plot <- m_plot + w_plot
@@ -139,66 +141,64 @@ ggsave(here::here("Final_project", "output", "figure",
 ```
 
 
+> Now, we will look at the dataset for both gender and observe their marriage trend for individuals with only a high school diploma or less. To check our two previous datasets.
 
 ```{r}
-sum_calculating <- function(.data, variables) {
-  
-  
-  descriptives <- .data %>%
-    summarize(across(all_of(variables)), list( mean = mean, sd = sd, min = min, max= max), na.rm = TRUE) %>% 
-    pivot_longer(cols = everything(), names_to = c("Education", ".value"), names_sep = "_")
+bg <- both_gender %>%
+  select(year, starts_with("HS_")) 
 
-  corr <- .data %>% 
-    correlation::correlation(select = variables) %>% 
-    summary()
+bg_long <- bg %>% pivot_longer(
+  cols = -year,
+  names_sep = "_",
+  names_to = c("edu", "age"),
+  values_to = "rate"
+)
 
-  
-  
-    
-  tab <- full_join(
-    descriptives,
-    corr,
-    by = c("year", "date"
-  ))
-  
-  return(tab)
-}
 
-men_ed_data <- men_data %>%
-  group_by(year)
+bg_plot <- bg_long %>% 
+  ggplot(aes(x=year,y=rate, color = age)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women.")
 
-women_ed_data <- women_data %>% 
-  group_by(year)
-
-education_level <- c("HS_2534", "SC_2534", "BAp_2534", "BAo_2534", "GD_2534")
-
-table_men <- sum_calculating(men_ed_data, education_level)
-table_women <-  sum_calculating(women_ed_data, education_level)
-
-table_men
-table_women
-
+bg_plot
 ```
 
 ```{r}
-sum_for_both_gend <- both_gender %>% 
+m_plot + w_plot + bg_plot
+```
+
+## Data summary of both gender for individuals with a high school diploma or less.
+
+> First, I want to create a list of all of the age range of individuals holding a high school diploma or less.
+
+```{r}
+HS_all_age <- both_gender %>% 
+  select(c("year", "HS_2534", "HS_3544", "HS_4554"))
+```
+
+> Then I calculated the data.
+
+```{r}
+sum_for_both_gend <- HS_all_age %>% 
   group_by(year) %>% 
-  summarize(across(c(HS_2534:BAo_2534),
-                      list(mean = ~ mean(.x, na.rm= TRUE),
-                sd = ~ sd(.x, na.rm = TRUE),
-                min = ~ min(.x, na.rm = TRUE),
-                max = ~ max(.x, na.rm = TRUE))))
+  summarise_all(funs(n(), mean, median))
+
 sum_for_both_gend
 write.csv(sum_for_both_gend,
           here::here("Final_project", "output", "Sum_both_gend.csv"))
 ```
 
 ```{r}
-sum_for_both_gend %>% 
-  correlation::correlation(select = c("BAo_2534_mean", "BAp_2534_mean", "SC_2534_mean", "HS_2534_mean")) %>% 
+Sum_both_gend_corr <- sum_for_both_gend %>% 
+  correlation::correlation(select = c("HS_2534_mean", "HS_3544_mean", "HS_4554_mean")) %>% 
   summary()
-  
+
+both_gend_tab <- full_join(sum_for_both_gend, Sum_both_gend_corr)
+both_gend_tab
 ```
+
+Hm, this looks really wrong. I am not supposed to get a correlation of anything higher than .8 realistically speaking. But, the correlation I provided is my attempt at trying to figure out whether age has any correlation with marriage rate for both genders for individuals who have a high school diploma or less. The data (which is extremely flawed and I need to find a way to update, fix this) indicated there is a strong correlation between age and marriage rate for individuals with a high school diploma or less throughout the years.
 
 ```{r}
 tibble_both_gender <- as.tibble(both_gender)
