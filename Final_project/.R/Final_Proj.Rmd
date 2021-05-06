@@ -96,6 +96,8 @@ m_plot <- m_long %>%
 m_plot
 ```
 
+> The marriage trends among the different age groups of individuals who obtained only a high school diploma or less are significant. From 1960 to 2010, individuals age ranged from twenty-five to thirty-four years old experienced the highest increase of marraige trend followed by thirty-five to fourty-four years olds, then fourty-five to fifty-four years old. The marriage trend for all three groups started gaining traction starting in 1980 with the orange age group exponentially increased their marriage rate trend when compared to other group's marriage trend. Overall, the older an individual who only has a high school diploma is, the lower the chance of them marrying, but marriage rate for every age group is still increasing throughout the years.
+
 ### women Marriage Data for individuals with only a high school diploma and less.
 ```{r}
 w <- women_data %>%
@@ -118,12 +120,16 @@ w_plot <- w_long %>%
 w_plot
 ```
 
+> Overall, the trend of marriage rate for women also matches up with the men, although the rate is not as high. The increasing pattern is similar that of the men with the noticeable increase in the trend starting in the 1990s.
+
 ## Comapring graphs of marriage trend for men and women who only have a high school diploma or less.
 
 ```{r}
 combined_w_m_plot <- m_plot + w_plot
 combined_w_m_plot
 ```
+
+> Here is a better look into the comparison of the trends between two genders.
 
 ```{r}
 ggsave(here::here("Final_project", "output", "figure",
@@ -144,7 +150,7 @@ ggsave(here::here("Final_project", "output", "figure",
 ```
 
 
-> Now, we will look at the dataset for both gender and observe their marriage trend for individuals with only a high school diploma or less. To check our two previous datasets.
+> Now, we will look at the dataset for both gender and observe their marriage trend for individuals with only a high school diploma or less. To check our two previous datasets and see if the provided combined dataset of both gender matches with our previous one.
 
 ```{r}
 bg <- both_gender %>%
