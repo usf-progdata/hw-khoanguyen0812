@@ -15,6 +15,9 @@ library(ggdist)
 library(svglite)
 library(correlation)
 library(patchwork)
+library(ggplot2)
+library(viridis)
+library(RColorBrewer)
 ```
 
 ```{r}
@@ -89,8 +92,11 @@ m_long <- m %>% pivot_longer(
 m_plot <- m_long %>% 
   ggplot(aes(x=year,y=rate, color = age)) +
   geom_point() +
+  scale_color_brewer(palette = "Dark2") +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men.")
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men.") +
+  theme_minimal()+
+  theme(legend.position = "right")
 
 m_plot
 ```
@@ -114,7 +120,9 @@ w_plot <- w_long %>%
   ggplot(aes(x=year,y=rate, color = age)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Women.")
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Women.") +
+   theme_minimal()+
+  theme(legend.position = "right")
 
 w_plot
 ```
@@ -199,7 +207,10 @@ bg_plot <- bg_long %>%
   ggplot(aes(x=year,y=rate, color = age)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women.")
+  scale_color_brewer(palette = "YlOrRd") +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women.") +
+   theme_minimal()+
+  theme(legend.position = "right")
 
 bg_plot
 ```
@@ -256,7 +267,11 @@ bg_Bach_high_plot <- bg_Bach_high_long %>%
   ggplot(aes(x=year,y=rate, color = age)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women with Bachelor or Higher.")
+  scale_color_viridis(discrete = TRUE, option = "D")+
+  scale_fill_viridis(discrete = TRUE) +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women with Bachelor or Higher.") +
+  theme_minimal()+
+  theme(legend.position = "top")
 
 bg_Bach_high_plot
 ```
@@ -292,7 +307,9 @@ div_plot <- div_long %>%
   ggplot(aes(x=year,y=rate, color = age)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Divorce Trend Among Individuals with only a High School Diploma.")
+  labs(title = "Divorce Trend Among Individuals with only a High School Diploma.") +
+   theme_minimal()+
+  theme(legend.position = "bottom")
 
 div_plot
 ```
