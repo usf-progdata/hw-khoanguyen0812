@@ -127,7 +127,7 @@
 <text x='280.28' y='838.26' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: Arial;' textLength='19.58px' lengthAdjust='spacingAndGlyphs'>2000</text>
 <text x='336.43' y='838.26' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: Arial;' textLength='19.58px' lengthAdjust='spacingAndGlyphs'>2010</text>
 <text x='201.66' y='850.72' text-anchor='middle' style='font-size: 11.00px; font-family: Arial;' textLength='21.41px' lengthAdjust='spacingAndGlyphs'>year</text>
-<text transform='translate(18.84,427.84) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: Arial;' textLength='18.96px' lengthAdjust='spacingAndGlyphs'>rate</text>
+<text transform='translate(18.84,427.84) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: Arial;' textLength='69.72px' lengthAdjust='spacingAndGlyphs'>Marriage Rate</text>
 <text x='378.70' y='403.12' style='font-size: 11.00px; font-family: Arial;' textLength='18.36px' lengthAdjust='spacingAndGlyphs'>age</text>
 <circle cx='387.34' cy='418.40' r='1.95' style='stroke-width: 0.71; stroke: #1B9E77; fill: #1B9E77;' />
 <line x1='380.43' y1='418.40' x2='394.25' y2='418.40' style='stroke-width: 2.13; stroke: #1B9E77; stroke-linecap: butt;' />
@@ -244,7 +244,7 @@
 <text x='706.80' y='838.26' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: Arial;' textLength='19.58px' lengthAdjust='spacingAndGlyphs'>2000</text>
 <text x='762.95' y='838.26' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: Arial;' textLength='19.58px' lengthAdjust='spacingAndGlyphs'>2010</text>
 <text x='628.18' y='850.72' text-anchor='middle' style='font-size: 11.00px; font-family: Arial;' textLength='21.41px' lengthAdjust='spacingAndGlyphs'>year</text>
-<text transform='translate(445.36,427.84) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: Arial;' textLength='18.96px' lengthAdjust='spacingAndGlyphs'>rate</text>
+<text transform='translate(445.36,427.84) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: Arial;' textLength='69.72px' lengthAdjust='spacingAndGlyphs'>Marriage Rate</text>
 <text x='805.22' y='403.12' style='font-size: 11.00px; font-family: Arial;' textLength='18.36px' lengthAdjust='spacingAndGlyphs'>age</text>
 <circle cx='813.86' cy='418.40' r='1.95' style='stroke-width: 0.71; stroke: #F8766D; fill: #F8766D;' />
 <line x1='806.95' y1='418.40' x2='820.77' y2='418.40' style='stroke-width: 2.13; stroke: #F8766D; stroke-linecap: butt;' />
