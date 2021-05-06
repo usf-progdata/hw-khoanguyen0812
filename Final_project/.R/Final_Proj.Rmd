@@ -1,0 +1,330 @@
+---
+title: "Final_Proj"
+author: "Khoa Nguyen"
+date: "3/9/2021"
+output:  
+  html_document: default
+  gitub_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readr)
+library(ggdist)
+library(svglite)
+library(correlation)
+library(splitstackshape)
+library(patchwork)
+```
+
+```{r}
+if ( !dir.exists( here::here("Final_project", "data_raw") ) ) {
+  dir.create( here::here("Final_project", "data_raw", "output", ".R"), recursive = TRUE )
+}
+```
+
+# Divorce rate trend and Marriage Rate Trend Comparison.
+## Research Questions.
+> Is the differences between the marriage trend and dicorve trend throughout the years significant enough for us to reconsider what is the criteria for a committed marriage? This is also a follow-up to the original study.
+
+
+```{r}
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/divorce.csv"
+bothsexes <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/both_sexes.csv"
+men <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/men.csv"
+women <-  "https://raw.githubusercontent.com/fivethirtyeight/data/master/marriage/women.csv"
+```
+
+```{r}
+Major_data <- read.csv(url,
+                       na = c("NA", " ", "-999"))
+both_gender <-  read.csv(bothsexes,
+                       na = c("NA", " ", "-999"))
+men_data <-  read.csv(men,
+                       na = c("NA", " ", "-999"))
+women_data <-  read.csv(women,
+                       na = c("NA", " ", "-999"))
+```
+
+```{r}
+write.csv(Major_data,
+          here::here("Final_project", "data_raw", "Major_data.csv"))
+write.csv(both_gender,
+          here::here("Final_project", "data_raw", "Both_gender.csv"))
+write.csv(men_data,
+          here::here("Final_project", "data_raw", "Men_data.csv"))
+write.csv(women_data,
+          here::here("Final_project", "data_raw", "Women_data.csv"))
+```
+
+```{r}
+read.csv(
+  here::here("Final_Project", "data_raw", "Major_data.csv"))
+read.csv(
+  here::here("Final_Project", "data_raw", "Both_gender.csv"))
+read.csv(
+  here::here("Final_Project", "data_raw", "Men_data.csv"))
+read.csv(
+  here::here("Final_Project", "data_raw", "Women_data.csv"))
+```
+
+> Our main objective for this project is to perform a follow-up study to examine the trend of marriage across education level for both gender across time, along with measurint it against the divorce rate trend.
+
+## Summarizing data and observing the marriage trend for Individuals with a High School Diploma or Less.
+### Men Marriage Trend Data for individuals with only a high school diploma and less.
+
+
+```{r}
+m <- men_data %>%
+  select(year, starts_with("HS_")) 
+
+m_long <- m %>% pivot_longer(
+  cols = -year,
+  names_sep = "_",
+  names_to = c("edu", "age"),
+  values_to = "rate"
+)
+
+
+m_plot <- m_long %>% 
+  ggplot(aes(x=year,y=rate, color = age)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men.")
+
+m_plot
+```
+
+### women Marriage Data for individuals with only a high school diploma and less.
+```{r}
+w <- women_data %>%
+  select(year, starts_with("HS_")) 
+
+w_long <- w %>% pivot_longer(
+  cols = -year,
+  names_sep = "_",
+  names_to = c("edu", "age"),
+  values_to = "rate"
+)
+
+
+w_plot <- w_long %>% 
+  ggplot(aes(x=year,y=rate, color = age)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Women.")
+
+w_plot
+```
+
+## Comapring graphs of marriage trend for men and women who only have a high school diploma or less.
+
+```{r}
+combined_w_m_plot <- m_plot + w_plot
+combined_w_m_plot
+```
+
+```{r}
+ggsave(here::here("Final_project", "output", "figure",
+                  "Marriage Trend Amongst Different Age Group Over Time for Men.svg"),
+       m_plot,
+       height = 6,
+       width = 6)
+ggsave(here::here("Final_project", "output", "figure",
+                  "Marriage Trend Amongst Different Age Group Over Time for Women.svg"),
+       w_plot,
+       height = 10,
+       width = 10)
+ggsave(here::here("Final_project", "output", "figure",
+                  "Marriage Trend Amongst Different Age Group Over Time for both gender.svg"),
+       combined_w_m_plot,
+       height = 12,
+       width = 12)
+```
+
+
+> Now, we will look at the dataset for both gender and observe their marriage trend for individuals with only a high school diploma or less. To check our two previous datasets.
+
+```{r}
+bg <- both_gender %>%
+  select(year, starts_with("HS_")) 
+
+bg_long <- bg %>% pivot_longer(
+  cols = -year,
+  names_sep = "_",
+  names_to = c("edu", "age"),
+  values_to = "rate"
+)
+
+
+bg_plot <- bg_long %>% 
+  ggplot(aes(x=year,y=rate, color = age)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women.")
+
+bg_plot
+```
+
+```{r}
+main_compared_data <- m_plot + w_plot + bg_plot
+main_compared_data
+
+ggsave(here::here("Final_project", "output", "figure",
+                  "Comparison of Marriage Trend for Men and Women versus Combined.svg"),
+       main_compared_data,
+       height = 6,
+       width = 6)
+```
+
+## Data summary of both gender for individuals with a high school diploma or less.
+
+> First, I want to create a list of all of the age range of individuals holding a high school diploma or less.
+
+```{r}
+HS_all_age <- both_gender %>% 
+  select(c("year", "HS_2534", "HS_3544", "HS_4554"))
+```
+
+> Then I calculated the data.
+
+```{r}
+sum_for_both_gend <- HS_all_age %>% 
+  group_by(year) %>% 
+  summarise_all(funs(n(), mean, median))
+
+sum_for_both_gend
+write.csv(sum_for_both_gend,
+          here::here("Final_project", "output", "Sum_both_gend.csv"))
+```
+
+```{r}
+Sum_both_gend_corr <- sum_for_both_gend %>% 
+  correlation::correlation(select = c("HS_2534_mean", "HS_3544_mean", "HS_4554_mean")) %>% 
+  summary()
+
+both_gend_tab <- full_join(sum_for_both_gend, Sum_both_gend_corr)
+both_gend_tab
+```
+
+Hm, this looks really wrong. I am not supposed to get a correlation of anything higher than .8 realistically speaking. But, the correlation I provided is my attempt at trying to figure out whether age has any correlation with marriage rate for both genders for individuals who have a high school diploma or less. The data (which is extremely flawed and I need to find a way to update, fix this) indicated there is a strong correlation between age and marriage rate for individuals with a high school diploma or less throughout the years.
+
+```{r}
+tibble_both_gender <- as.tibble(both_gender)
+print(tibble_both_gender)
+write.csv(tibble_both_gender, 
+          here::here("Final_project", "data", "tibble_both_gender.csv"))
+```
+
+Bachelor Degree or higher:
+```{r}
+tibble_both_gender_output1 <- tibble_both_gender %>%
+  select(year, date, BAp_2534) %>% 
+  group_by(year) %>%
+  filter(BAp_2534 == max(BAp_2534))
+tibble_both_gender_output1
+write.csv(tibble_both_gender_output1,
+          here::here("Final_project", "output", "Max_change_in_years_for_higher_education.csv"))
+```
+
+As we can see here, the maximum marriage population for people with higher level of education seems to increase over time. This of course is just one variable.
+
+Now, let's look at divorce rate among the population throughout the year by education.
+
+```{r}
+Divorce_sum <- Major_data %>% 
+  summarize(across(c(HS_3544:BAp_3544),
+                      list(mean = ~ mean(.x, na.rm= TRUE),
+                sd = ~ sd(.x, na.rm = TRUE),
+                min = ~ min(.x, na.rm = TRUE),
+                max = ~ max(.x, na.rm = TRUE))))
+Divorce_sum
+write.csv(Divorce_sum,
+          here::here("Final_project", "output", "Divorce_sum.csv"))
+```
+
+```{r}
+Divorce_trend_output <- Major_data %>%
+  select(year, date, BAp_3544) %>% 
+  group_by(year) %>%
+  filter(BAp_3544 == max(BAp_3544))
+Divorce_trend_output
+write.csv(Divorce_trend_output,
+          here::here("Final_project", "output", "Divorce_trend_output.csv"))
+```
+
+As indicated within the data for population that are 35 to 44 years of age, and has a college degree or higher, the trend for divorce rate seems to be increasing by the years when looking at their highest divorce rate for the years (slightly decreasing starting to see significant decreasing in the early 2000s).
+
+Now, let's look at some graphs for the marriage rate versus divorce rate.
+
+I first had to extract out the exact data I want to look at from the divorce dataset and compare it with the marriage one.
+
+```{r}
+Divorce_BAp_3544_Data1 <- Major_data %>% 
+  mutate(Divorce_BAp_3544 = BAp_3544) %>% 
+  select(Divorce_BAp_3544)
+Divorce_BAp_3544_Data1
+```
+
+```{r}
+Marriage_BAp_3544_Data1 <- both_gender %>% 
+  mutate(Marriage_BAp_3544 = BAp_3544) %>% 
+  select(Marriage_BAp_3544)
+Marriage_BAp_3544_Data1
+```
+
+I then combined both of them together to make the graph.
+
+
+```{r}
+cbind_BAp_3544_Compar_Data <- cbind(Marriage_BAp_3544_Data1, Divorce_BAp_3544_Data1)
+cbind_BAp_3544_Compar_Data
+```
+
+```{r}
+Rainfall_graph_for_marriage_and_divorce <- cbind_BAp_3544_Compar_Data %>% 
+  drop_na(c(Marriage_BAp_3544:Divorce_BAp_3544)) %>% 
+  ggplot +
+  aes(
+    x = Marriage_BAp_3544,
+    y = Divorce_BAp_3544,
+    fill = Divorce_BAp_3544,
+    color = Divorce_BAp_3544
+  ) +
+  geom_jitter(
+    alpha = .5,
+    height = .2,
+    width = .0,
+    na.rm = TRUE
+  ) +
+  geom_boxplot(
+    width = .1,
+    color = "Black",
+    fill = "transparent"
+  ) +
+  ggdist::stat_sample_slabinterval(
+    alpha = .5,
+    height = .2,
+    color = "black",
+    position = position_nudge(y = .2)
+  ) +
+  theme_classic() +
+  labs(title = "Comparative Data",
+       y = NULL,
+       x = "BAp_3544"
+       ) +
+  theme(plot.title.position = "plot") +
+  guides(color = guide_none(), fill = guide_none())
+Rainfall_graph_for_marriage_and_divorce
+```
+
+```{r}
+ggsave(here::here("Final_project", "output", "figure",
+                  "Rainfall_graph_for_marriage_and_divorce.svg"),
+       Rainfall_graph_for_marriage_and_divorce,
+       height = 6,
+       width = 6)
+```
+
+Oh god. This is an abomination. Okay, nothing to see here. Let's go back to regular graph.
