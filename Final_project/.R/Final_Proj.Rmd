@@ -88,13 +88,24 @@ m_long <- m %>% pivot_longer(
   values_to = "rate"
 )
 
+m_long_trim <- 
+  bg_long %>% 
+  mutate(age_range = case_when(
+    age == "2534" ~ "25 to 34",
+    age == "3544" ~ "35 to 44",
+    age == "4554" ~ "45 to 54"
+  ))
 
-m_plot <- m_long %>% 
-  ggplot(aes(x=year,y=rate, color = age)) +
+m_plot <- m_long_trim %>% 
+  ggplot(aes(x=year,y=rate, color = age_range)) +
   geom_point() +
   scale_color_brewer(palette = "Dark2") +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men.", x = "year", y = "Marriage Rate") +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men.",
+    x = "year",
+    y = "Marriage Rate",
+    color = "Age Range"
+  ) +
   theme_minimal()+
   theme(legend.position = "right")
 
@@ -115,13 +126,24 @@ w_long <- w %>% pivot_longer(
   values_to = "rate"
 )
 
+w_long_trim <- 
+  bg_long %>% 
+  mutate(age_range = case_when(
+    age == "2534" ~ "25 to 34",
+    age == "3544" ~ "35 to 44",
+    age == "4554" ~ "45 to 54"
+  ))
 
-w_plot <- w_long %>% 
-  ggplot(aes(x=year,y=rate, color = age)) +
+w_plot <- w_long_trim %>% 
+  ggplot(aes(x=year,y=rate, color = age_range)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Women.", x = "year", y = "Marriage Rate") +
-   theme_minimal()+
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Women.",
+    x = "year",
+    y = "Marriage Rate",
+    color = "Age Range"
+  ) +
+   theme_minimal() +
   theme(legend.position = "right")
 
 w_plot
@@ -140,22 +162,21 @@ combined_w_m_plot
 
 ```{r}
 ggsave(here::here("Final_project", "output", "figure",
-                  "Marriage Trend Amongst Different Age Group Over Time for Men.svg"),
+                  "Marriage Trend Amongst Different Age Group Over Time for Men with High School diploma or less.svg"),
        m_plot,
        height = 6,
        width = 6)
 ggsave(here::here("Final_project", "output", "figure",
-                  "Marriage Trend Amongst Different Age Group Over Time for Women.svg"),
+                  "Marriage Trend Amongst Different Age Group Over Time for Women with High School diploma or less.svg"),
        w_plot,
        height = 10,
        width = 10)
 ggsave(here::here("Final_project", "output", "figure",
-                  "Marriage Trend Amongst Different Age Group Over Time for both gender.svg"),
+                  "Comparative Marriage Trend Amongst Different Age Group Over Time for both gender with High School diploma or less.svg"),
        combined_w_m_plot,
        height = 20,
        width = 20)
 ```
-
 
 
 ## Data summary of both gender for individuals with a high school diploma or less.
@@ -188,7 +209,8 @@ both_gend_tab <- full_join(sum_for_both_gend, Sum_both_gend_corr)
 both_gend_tab
 ```
 
-> Hm, this looks really wrong. I am not supposed to get a correlation of anything higher than .8 realistically speaking. But, the correlation I provided is my attempt at trying to figure out whether age has any correlation with marriage rate for both genders for individuals who have a high school diploma or less. The data (which is extremely flawed and I need to find a way to update, fix this) indicated there is a strong correlation between age and marriage rate for individuals with a high school diploma or less throughout the years.
+> Hm, this looks really wrong. I am not supposed to get a correlation of anything higher than .7 realistically speaking. But, the correlation I provided is my attempt at trying to figure out whether age has any correlation with marriage rate for both genders for individuals who have a high school diploma or less. The data (which is extremely flawed and I need to find a way to update, fix this) indicated there is a strong correlation between age and marriage rate for individuals with a high school diploma or less throughout the years.
+
 > Now, we will look at the dataset for both gender and observe their marriage trend for individuals with only a high school diploma or less. To check our two previous datasets and see if the provided combined dataset of both gender matches with our previous one.
 
 ```{r}
@@ -200,22 +222,41 @@ bg_long <- bg %>% pivot_longer(
   names_sep = "_",
   names_to = c("edu", "age"),
   values_to = "rate"
-)
+) 
 
 
-bg_plot <- bg_long %>% 
-  ggplot(aes(x=year,y=rate, color = age)) +
+bg_long_trim <- 
+  bg_long %>% 
+  mutate(age_range = case_when(
+    age == "2534" ~ "25 to 34",
+    age == "3544" ~ "35 to 44",
+    age == "4554" ~ "45 to 54"
+  ))
+
+bg_plot <- bg_long_trim %>% 
+  ggplot(aes(x=year,y=rate, color = age_range)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   scale_color_brewer(palette = "YlOrRd") +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women.", x = "year", y = "Marriage Rate") +
-   theme_minimal()+
+  labs(
+    title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women.",
+    x = "year",
+    y = "Marriage Rate",
+    color = "Age Range"
+  ) +
+  theme_minimal() +
   theme(legend.position = "right")
 
+
 bg_plot
+ggsave(here::here("Final_project", "output", "figure",
+                  "Marriage Trend Amongst Different Age Group Over Time for both gender with High School diploma or less.svg"),
+       bg_plot,
+       height = 10,
+       width = 10)
 ```
 
-> This dataset seems very similar to the two individually produced gendered dataset mentioned above.
+> This dataset seems very similar to the two individually produced gendered datasets mentioned above.
 
 ```{r}
 main_compared_data <- m_plot + w_plot + bg_plot
@@ -230,6 +271,8 @@ ggsave(here::here("Final_project", "output", "figure",
 
 > At this rate, it can be safely assumed that the dataset with both gender approximately matches with the two individual gender dataset. WE will use the dataset with both genders in the future due to its conveinency for future comparison with divorce rate, etc.
 
+> We are going to transform the "Both gender" dataset into a Tibble here and save everytihng.
+
 ```{r}
 tibble_both_gender <- as.tibble(both_gender)
 print(tibble_both_gender)
@@ -237,19 +280,34 @@ write.csv(tibble_both_gender,
           here::here("Final_project", "data", "tibble_both_gender.csv"))
 ```
 
+```{r}
+write.csv(m_long_trim,
+          here::here("Final_project", "output", "Men_Marriage_Rate_Trimmed_for_HS_output.csv"))
+write.csv(w_long_trim,
+          here::here("Final_project", "output", "Women_Marriage_Rate_Trimmed_for_HS_output.csv"))
+write.csv(bg_long_trim,
+          here::here("Final_project", "output", "Both_Genders_Marriage_Rate_Trimmed_for_HS_output.csv"))
+```
+
 ### Marriage Rate and Trend of Individuals with a Bachelor Degree or higher.
+
+> Let's calculate the maximum output for individuals with a Bachelor or higher.
 
 ```{r}
 tibble_both_gender_output1 <- tibble_both_gender %>%
   select(year, date, BAp_2534) %>% 
   group_by(year) %>%
   filter(BAp_2534 == max(BAp_2534))
+
 tibble_both_gender_output1
+
 write.csv(tibble_both_gender_output1,
           here::here("Final_project", "output", "Max_change_in_years_for_higher_education.csv"))
 ```
 
 > As we can see here, the maximum marriage population for people with higher level of education seems to increase over time. This of course is just one variable.
+
+> Let's create a graph to observe the marriage trend of individuals possessing a Bachelor or higher.
 
 ```{r}
 bg_Bach_high <- both_gender %>%
@@ -262,21 +320,40 @@ bg_Bach_high_long <- bg_Bach_high %>% pivot_longer(
   values_to = "rate"
 )
 
+bg_Bach_high_long_trim <- 
+  bg_long %>% 
+  mutate(age_range = case_when(
+    age == "2534" ~ "25 to 34",
+    age == "3544" ~ "35 to 44",
+    age == "4554" ~ "45 to 54"
+  ))
 
-bg_Bach_high_plot <- bg_Bach_high_long %>% 
-  ggplot(aes(x=year,y=rate, color = age)) +
+bg_Bach_high_plot <- bg_Bach_high_long_trim %>% 
+  ggplot(aes(x=year,y=rate, color = age_range)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  scale_color_viridis(discrete = TRUE, option = "D")+
+  scale_color_viridis(discrete = TRUE, option = "D") +
   scale_fill_viridis(discrete = TRUE) +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women with Bachelor or Higher.", x = "year", y = "Marriage Rate") +
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women with Bachelor or Higher.", 
+       x = "year", 
+       y = "Marriage Rate",
+       color = "Age Range") +
   theme_minimal()+
   theme(legend.position = "top")
 
 bg_Bach_high_plot
 ```
 
-> Compared to the marriage rate of individuals who have lower education than the ones who have a bachelor or higher, It can be seen that the marriage rate of individuals who are of higher-level-of-education are not marrying as much. The trend for these individuals plateau around the age of 45 to 54 throughout the years with a slight increase starting in the early 2000s, but plateu and decreased again. The rate of marriage for individuals with a Bachelor Degree or higher seems to be significantly less than the ones who only have high school diploma or less when their age is 35 years old or older. No significant differences in the marriage trend of individuals at the age of 25 to 34 can be seen when education is taken into account. This data can be seen down below.
+> Compared to the marriage rate of individuals who have lower education than the ones who have a bachelor or higher, It can be seen that the marriage rate of individuals who are of higher-level-of-education are not marrying as much. The trend for these individuals plateau around the age of 45 to 54 throughout the years with a slight increase starting in the early 2000s, but plateu and decreased again. The rate of marriage for individuals with a Bachelor Degree or higher seems to be significantly less than the ones who only have high school diploma or less when their age is 35 years old or older. Although higher marriage rate was observed at the beginning of 1960 for Bachelor Degree or higher individuals, no significant differences in the marriage trend of individuals at the age of 25 to 34 can be seen throughhout the years when education is taken into account. This data can be seen down below.
+
+```{r}
+write.csv(bg_Bach_high_long_trim,
+          here::here("Final_project", 
+                     "output", 
+                     "Both_Genders_Marriage_Rate_Trimmed_for_BA_and_higher_output.csv"))
+```
+
+> Now, let's observe the trend differences in marriage rate between individuals with only a high school diploma versus individuals with a Bachelor or higher.
 
 ```{r}
 comparative_data_for_marriage_hsBa <- bg_plot + bg_Bach_high_plot
@@ -292,6 +369,7 @@ ggsave(here::here("Final_project", "output", "figure",
 
 
 ### Divorce Rate Calculation.
+
 > Now, let's look at divorce rate among the population throughout the year by education.
 
 ```{r}
@@ -317,12 +395,22 @@ div_long <- div %>% pivot_longer(
   values_to = "rate"
 )
 
+div_long_trim <- 
+  div_long %>% 
+  mutate(age_range = case_when(
+    age == "2534" ~ "25 to 34",
+    age == "3544" ~ "35 to 44",
+    age == "4554" ~ "45 to 54"
+  ))
 
-div_plot <- div_long %>% 
-  ggplot(aes(x=year,y=rate, color = age)) +
+div_plot <- div_long_trim %>% 
+  ggplot(aes(x=year,y=rate, color = age_range)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Divorce Trend Among Individuals with only a High School Diploma.") +
+  labs(title = "Divorce Trend Among Individuals with only a High School Diploma.",
+       x = "Year",
+       y = "Divorce Rate",
+       color = "Age Range") +
    theme_minimal()+
   theme(legend.position = "bottom")
 
@@ -341,7 +429,10 @@ write.csv(Divorce_trend_output,
 
 > As indicated within the data for population that are 35 to 44 years of age, and has a college degree or higher, the trend for divorce rate seems to be increasing by the years when looking at their highest divorce rate for the years (slightly decreasing starting to see significant decreasing in the early 2000s).
 
-> Now, let's look at some graphs for the marriage rate versus divorce rate.
+> Now, let's look at additional graphs for the marriage rate versus divorce rate.
+
+
+### Accumulative Comparative Graph for Divorce Rate vs 
 
 > I first had to extract out the exact data I want to look at from the divorce dataset and compare it with the marriage one.
 
@@ -363,13 +454,19 @@ Marriage_BAp_3544_Data1
 
 
 ```{r}
-cbind_BAp_3544_Compar_Data <- cbind(Marriage_BAp_3544_Data1, Divorce_BAp_3544_Data1)
-cbind_BAp_3544_Compar_Data
+div_to_comb <- Major_data %>%
+  select(year, starts_with(c("HS_", "BAo_", "BAp_")))
+
+bg_comb <- both_gender %>%
+  select(year, starts_with(c("HS_", "BAo_", "BAp_")))
+
+Joined_data_for_M_D <- full_join(div_to_comb, bg_comb, by = "year", suffix = c("_Marriage", "_Divorce")) 
+Joined_data_for_M_D_trim <- Joined_data_for_M_D %>% 
+  select("year", "HS_3544_Marriage", "HS_3544_Divorce", "HS_4554_Marriage", "HS_4554_Divorce", "BAo_3544_Marriage", "BAo_3544_Divorce", "BAo_4554_Marriage", "BAo_4554_Divorce", "BAp_3544_Marriage", "BAp_3544_Divorce", "BAp_4554_Marriage", "BAp_4554_Divorce")
 ```
 
 ```{r}
-Rainfall_graph_for_marriage_and_divorce <- cbind_BAp_3544_Compar_Data %>% 
-  drop_na(c(Marriage_BAp_3544:Divorce_BAp_3544)) %>% 
+Joined_data_for_M_D_trim %>% 
   ggplot +
   aes(
     x = Marriage_BAp_3544,
@@ -412,4 +509,4 @@ ggsave(here::here("Final_project", "output", "figure",
        width = 6)
 ```
 
-Oh god. This is an abomination. Okay, nothing to see here. Let's go back to regular graph.
+> Oh god. This is an abomination. Okay, nothing to see here. Let's go back to regular graph.
