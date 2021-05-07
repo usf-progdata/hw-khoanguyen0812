@@ -111,7 +111,7 @@ m_plot <- m_long_trim %>%
   geom_smooth(
     method = "lm", se = FALSE) +
   labs(
-    title = "Marriage Trend Amongst Different Age Group Over Time for Men.",
+    title = "Marriage Trend Amongst Different Age Group Over Time for Men with only High School Diploma.",
     x = "year",
     y = "Marriage Rate",
     color = "Age Range"
@@ -149,7 +149,7 @@ w_plot <- w_long_trim %>%
   ggplot(aes(x=year,y=rate, color = age_range)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Women.",
+  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Women with only High School Diploma.",
     x = "year",
     y = "Marriage Rate",
     color = "Age Range"
@@ -224,10 +224,18 @@ write.csv(
 
 ```{r}
 Sum_both_gend_corr <- sum_for_both_gend %>% 
-  correlation::correlation(select = c("HS_2534_mean", "HS_3544_mean", "HS_4554_mean")) %>% 
+  correlation::correlation(
+    select = c(
+      "HS_2534_mean",
+      "HS_3544_mean",
+      "HS_4554_mean")) %>% 
   summary()
 
-both_gend_tab <- full_join(sum_for_both_gend, Sum_both_gend_corr)
+both_gend_tab <- full_join(
+  sum_for_both_gend,
+  Sum_both_gend_corr)
+
+
 both_gend_tab
 
 write.csv(both_gend_tab,
@@ -268,7 +276,7 @@ bg_plot <- bg_long_trim %>%
   geom_smooth(method = "lm", se = FALSE) +
   scale_color_brewer(palette = "YlOrRd") +
   labs(
-    title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women.",
+    title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women with only High School Diploma.",
     x = "year",
     y = "Marriage Rate",
     color = "Age Range"
@@ -298,7 +306,7 @@ ggsave(
     "Final_project",
     "output",
     "figure",
-    "Comparison of Marriage Trend for Men and Women versus Combined.svg"),
+    "Comparison of Marriage Trend of Men and Women versus Combined who only have High School Diploma.svg"),
   main_compared_data,
   height = 25,
   width = 25)
@@ -427,6 +435,7 @@ ggsave(
        width = 25)
 ```
 
+> The differences in the trend's growth in different individuals possessing different education level can be observe here.
 
 ### Divorce Rate Calculation.
 
@@ -447,6 +456,8 @@ write.csv(
             "output",
             "Divorce_sum.csv"))
 ```
+
+> The divorce summary data was interesting. Let's see if we can observe the data in a graph form.
 
 ```{r}
 div <- Major_data %>%
@@ -503,6 +514,8 @@ write.csv(
             "Divorce_Rate_Trimmed_for_HS_output.csv"))
 ```
 
+> Let's calculate the max trend growth we can observe from divorce rate and see if that is an issue.
+
 ```{r}
 Max_Divorce_trend_output <- Major_data %>%
   select(
@@ -517,7 +530,7 @@ Max_Divorce_trend_output <- Major_data %>%
       BAp_3544))
 
 
-Divorce_trend_output
+Max_Divorce_trend_output
 
 
 write.csv(
@@ -528,14 +541,14 @@ write.csv(
             "Max_Divorce_trend_output.csv"))
 ```
 
-> As indicated within the data for population that are 35 to 44 years of age, and has a college degree or higher, the trend for divorce rate seems to be increasing by the years when looking at their highest divorce rate for the years (slightly decreasing starting to see significant decreasing in the early 2000s).
+> As indicated within the data for population that are 35 to 44 years of age, and has a college degree or higher, the trend for divorce rate seems to be increasing by the years when looking at their highest divorce rate ( starting to see significant decreasing in the early 2000s).
 
 > Now, let's look at additional graphs for the marriage rate versus divorce rate.
 
 
 ### Accumulative Comparative Graph for Divorce Rate vs Marriage Rate.
 
-> I combined both of them together to make the graph.
+> I combined the data of marriage rate and divorce rate together to make some graphs.
 
 
 ```{r}
