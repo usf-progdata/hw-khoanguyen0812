@@ -114,7 +114,7 @@ m_plot <- m_long_trim %>%
     title = "Marriage Trend Amongst Different Age Group Over Time for Men with only High School Diploma.",
     x = "year",
     y = "Marriage Rate",
-    color = "Age Range"
+    color = "Age Range:"
   ) +
   theme_minimal()+
   theme(
@@ -146,16 +146,22 @@ w_long_trim <-
   ))
 
 w_plot <- w_long_trim %>% 
-  ggplot(aes(x=year,y=rate, color = age_range)) +
+  ggplot(aes(
+    x=year,
+    y=rate,
+    color = age_range)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
+  geom_smooth(
+    method = "lm",
+    se = FALSE) +
   labs(title = "Marriage Trend Amongst Different Age Group Over Time for Women with only High School Diploma.",
     x = "year",
     y = "Marriage Rate",
-    color = "Age Range"
+    color = "Age Range:"
   ) +
    theme_minimal() +
-  theme(legend.position = "right")
+  theme(
+    legend.position = "right")
 
 w_plot
 ```
@@ -279,7 +285,7 @@ bg_plot <- bg_long_trim %>%
     title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women with only High School Diploma.",
     x = "year",
     y = "Marriage Rate",
-    color = "Age Range"
+    color = "Age Range:"
   ) +
   theme_minimal() +
   theme(legend.position = "right")
@@ -377,7 +383,7 @@ bg_Bach_high_long <- bg_Bach_high %>%
 )
 
 bg_Bach_high_long_trim <- 
-  bg_long %>% 
+  bg_Bach_high_long %>% 
   mutate(age_range = case_when(
     age == "2534" ~ "25 to 34",
     age == "3544" ~ "35 to 44",
@@ -400,7 +406,7 @@ bg_Bach_high_plot <- bg_Bach_high_long_trim %>%
   labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women with Bachelor or Higher.", 
        x = "year", 
        y = "Marriage Rate",
-       color = "Age Range") +
+       color = "Age Range:") +
   theme_minimal() +
   theme(legend.position = "top")
 
@@ -429,7 +435,7 @@ ggsave(
     "Final_project",
     "output",
     "figure",
-    "Comparative Data for different age group throughout education level.svg"),
+    "Comparative Data of Marriage Rate for different age groups throughout education level.svg"),
        comparative_data_for_marriage_hsBa,
        height = 25,
        width = 25)
@@ -486,7 +492,7 @@ div_plot <- div_long_trim %>%
   labs(title = "Divorce Trend Among Individuals with only a High School Diploma.",
        x = "Year",
        y = "Divorce Rate",
-       color = "Age Range") +
+       color = "Age Range:") +
    theme_minimal()+
   theme(legend.position = "bottom")
 
@@ -497,13 +503,13 @@ ggsave(
     "Final_project", 
     "output", 
     "figure",
-    "Divorce Rate Trend Graph for Individuals possessing a high school diploma or  less.svg"),
+    "Divorce Rate Trend Graph for Individuals possessing a high school diploma or less.svg"),
        div_plot,
        height = 10,
        width = 10)
 ```
 
-> As observed, the divorce trend is significantly different from the marriage trend with the difference being the rate is much higher in divorce than in marriage. Furthermore, the trend is growing even more starting from the early 2000s.
+> As observed, the divorce trend for individuals with only a high school diploma is significantly different from the marriage trend with the difference being the rate is much higher in divorce than in marriage. Furthermore, the trend is growing even more starting from the early 2000s.
 
 ```{r}
 write.csv(
@@ -512,6 +518,58 @@ write.csv(
             "Final_project",
             "output",
             "Divorce_Rate_Trimmed_for_HS_output.csv"))
+```
+
+> Let's calculate divorce rate for individuals with a Bachelor or higher.
+
+```{r}
+div_high <- Major_data %>%
+   select(year, starts_with(c("BAo_", "BAp_")))
+
+div_high_long <- div_high %>% 
+  pivot_longer(
+  cols = -year,
+  names_sep = "_",
+  names_to = c("edu", "age"),
+  values_to = "rate"
+)
+
+
+div_high_long_trim <- 
+  div_high_long %>% 
+  mutate(age_range = case_when(
+    age == "3544" ~ "35 to 44",
+    age == "4554" ~ "45 to 54"
+  ))
+
+div_high_plot <- div_high_long_trim %>% 
+  ggplot(aes(
+    x=year,
+    y=rate,
+    color = age_range)) +
+  geom_point() +
+  geom_smooth(
+    method = "lm",
+    se = FALSE) +
+  labs(title = "Divorce Trend Among Individuals with Bachelor or Higher.",
+       x = "Year",
+       y = "Divorce Rate",
+       color = "Age Range:") +
+   theme_minimal()+
+  theme(
+    legend.position = "bottom")
+
+div_high_plot
+
+ggsave(
+  here::here(
+    "Final_project", 
+    "output", 
+    "figure",
+    "Divorce Rate Trend Graph for Individuals possessing a Bachelor or higher.svg"),
+       div_high_plot,
+       height = 10,
+       width = 10)
 ```
 
 > Let's calculate the max trend growth we can observe from divorce rate and see if that is an issue.
@@ -548,6 +606,47 @@ write.csv(
 
 ### Accumulative Comparative Graph for Divorce Rate vs Marriage Rate.
 
+> Let's first look at some graphs' comparison between divorce rate and marriage rate.
+
+```{r}
+Comparative_marriage_divorce_highDip <- bg_plot + div_plot
+
+Comparative_marriage_divorce_highDip
+
+ggsave(
+  here::here(
+    "Final_project",
+    "output",
+    "figure",
+    "Comparative Data of Marriage Rate Trend and Divorce Rate Trend for Different Age Groups who only Posess High School Diploma or Less.svg"),
+       Comparative_marriage_divorce_highDip,
+       height = 25,
+       width = 25)
+```
+
+> Just as expected, for individuals who only have a high school diploma or less, the divorce rate is signiicantly higher than the marriage rate with divorce rate starting at a higher rate than marriage rate since 1960.
+
+> Now let's compare data for marriage rate trend and divorce rate trend for individuals with a Bachelor degree or higher.
+
+```{r}
+Comparative_marriage_divorce_BachHigh <- bg_Bach_high_plot + div_high_plot
+
+Comparative_marriage_divorce_BachHigh
+
+ggsave(
+  here::here(
+    "Final_project",
+    "output",
+    "figure",
+    "Comparative Data of Marriage Rate Trend and Divorce Rate Trend for Different Age Groups who posess a Bachelor or Higher.svg"),
+       Comparative_marriage_divorce_BachHigh,
+       height = 25,
+       width = 25)
+```
+
+> Comparing marriage rate to divorce rate in graphs form indicated that even in higher education, the divorce rate amongst individual who are 35 years or older is still significantly higher than marrirage rate with the drastic increase in the divorce trend growth starting in the 1970s to present. Data for divorce rate for individuals who are 25 years of age to 34 is needed to conduct a more proper assessment.
+
+### Rainfall graph.
 > I combined the data of marriage rate and divorce rate together to make some graphs.
 
 
@@ -644,4 +743,7 @@ ggsave(
        width = 6)
 ```
 
-> Oh god. This is an abomination. Okay, nothing to see here. Let's go back to regular graph.
+> Oh god. This is an abomination. Okay, nothing to see here. Let's stick to regular graphs.
+
+> Overall, the follow-up data indicates that the divorce trend is out-growing the marriage trend. This observed effect needs to be investigated more in order to rectify the absurdly high divorce rate here in the States within the past couple of decates.
+
