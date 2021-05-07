@@ -79,9 +79,12 @@ read.csv(
 
 ```{r}
 m <- men_data %>%
-  select(year, starts_with("HS_")) 
+  select(
+    year,
+    starts_with("HS_")) 
 
-m_long <- m %>% pivot_longer(
+m_long <- m %>%
+  pivot_longer(
   cols = -year,
   names_sep = "_",
   names_to = c("edu", "age"),
@@ -90,24 +93,32 @@ m_long <- m %>% pivot_longer(
 
 m_long_trim <- 
   bg_long %>% 
-  mutate(age_range = case_when(
+  mutate(
+    age_range = case_when(
     age == "2534" ~ "25 to 34",
     age == "3544" ~ "35 to 44",
     age == "4554" ~ "45 to 54"
   ))
 
 m_plot <- m_long_trim %>% 
-  ggplot(aes(x=year,y=rate, color = age_range)) +
+  ggplot(aes(
+    x=year,
+    y=rate,
+    color = age_range)) +
   geom_point() +
-  scale_color_brewer(palette = "Dark2") +
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men.",
+  scale_color_brewer(
+    palette = "Dark2") +
+  geom_smooth(
+    method = "lm", se = FALSE) +
+  labs(
+    title = "Marriage Trend Amongst Different Age Group Over Time for Men.",
     x = "year",
     y = "Marriage Rate",
     color = "Age Range"
   ) +
   theme_minimal()+
-  theme(legend.position = "right")
+  theme(
+    legend.position = "right")
 
 m_plot
 ```
@@ -185,7 +196,11 @@ ggsave(here::here("Final_project", "output", "figure",
 
 ```{r}
 HS_all_age <- both_gender %>% 
-  select(c("year", "HS_2534", "HS_3544", "HS_4554"))
+  select(c(
+    "year",
+    "HS_2534",
+    "HS_3544",
+    "HS_4554"))
 ```
 
 > Then I calculated the data.
@@ -193,11 +208,18 @@ HS_all_age <- both_gender %>%
 ```{r}
 sum_for_both_gend <- HS_all_age %>% 
   group_by(year) %>% 
-  summarise_all(funs(n(), mean, median))
+  summarise_all(
+    funs(n(),
+         mean,
+         median))
 
 sum_for_both_gend
-write.csv(sum_for_both_gend,
-          here::here("Final_project", "output", "Sum_both_gend.csv"))
+write.csv(
+  sum_for_both_gend,
+          here::here(
+            "Final_project",
+            "output",
+            "Sum_both_gend.csv"))
 ```
 
 ```{r}
@@ -207,6 +229,9 @@ Sum_both_gend_corr <- sum_for_both_gend %>%
 
 both_gend_tab <- full_join(sum_for_both_gend, Sum_both_gend_corr)
 both_gend_tab
+
+write.csv(both_gend_tab,
+          here::here("Final_project", "output", "Both_Genders_Marriage_Table_Data_for_HS_output.csv"))
 ```
 
 > Hm, this looks really wrong. I am not supposed to get a correlation of anything higher than .7 realistically speaking. But, the correlation I provided is my attempt at trying to figure out whether age has any correlation with marriage rate for both genders for individuals who have a high school diploma or less. The data (which is extremely flawed and I need to find a way to update, fix this) indicated there is a strong correlation between age and marriage rate for individuals with a high school diploma or less throughout the years.
@@ -215,9 +240,13 @@ both_gend_tab
 
 ```{r}
 bg <- both_gender %>%
-  select(year, starts_with("HS_")) 
+  select(
+    year,
+    starts_with("HS_")) 
 
-bg_long <- bg %>% pivot_longer(
+
+bg_long <- bg %>% 
+  pivot_longer(
   cols = -year,
   names_sep = "_",
   names_to = c("edu", "age"),
@@ -249,7 +278,9 @@ bg_plot <- bg_long_trim %>%
 
 
 bg_plot
-ggsave(here::here("Final_project", "output", "figure",
+ggsave(here::here("Final_project",
+                  "output",
+                  "figure",
                   "Marriage Trend Amongst Different Age Group Over Time for both gender with High School diploma or less.svg"),
        bg_plot,
        height = 10,
@@ -262,11 +293,15 @@ ggsave(here::here("Final_project", "output", "figure",
 main_compared_data <- m_plot + w_plot + bg_plot
 main_compared_data
 
-ggsave(here::here("Final_project", "output", "figure",
-                  "Comparison of Marriage Trend for Men and Women versus Combined.svg"),
-       main_compared_data,
-       height = 25,
-       width = 25)
+ggsave(
+  here::here(
+    "Final_project",
+    "output",
+    "figure",
+    "Comparison of Marriage Trend for Men and Women versus Combined.svg"),
+  main_compared_data,
+  height = 25,
+  width = 25)
 ```
 
 > At this rate, it can be safely assumed that the dataset with both gender approximately matches with the two individual gender dataset. WE will use the dataset with both genders in the future due to its conveinency for future comparison with divorce rate, etc.
@@ -274,10 +309,18 @@ ggsave(here::here("Final_project", "output", "figure",
 > We are going to transform the "Both gender" dataset into a Tibble here and save everytihng.
 
 ```{r}
-tibble_both_gender <- as.tibble(both_gender)
+tibble_both_gender <- as.tibble(
+  both_gender)
+
+
 print(tibble_both_gender)
+
+
 write.csv(tibble_both_gender, 
-          here::here("Final_project", "data", "tibble_both_gender.csv"))
+          here::here(
+            "Final_project",
+            "data",
+            "tibble_both_gender.csv"))
 ```
 
 ```{r}
@@ -295,9 +338,13 @@ write.csv(bg_long_trim,
 
 ```{r}
 tibble_both_gender_output1 <- tibble_both_gender %>%
-  select(year, date, BAp_2534) %>% 
+  select(
+    year,
+    date,
+    BAp_2534) %>% 
   group_by(year) %>%
-  filter(BAp_2534 == max(BAp_2534))
+  filter(
+    BAp_2534 == max(BAp_2534))
 
 tibble_both_gender_output1
 
@@ -313,7 +360,8 @@ write.csv(tibble_both_gender_output1,
 bg_Bach_high <- both_gender %>%
   select(year, starts_with(c("BAo_", "BAp_"))) 
 
-bg_Bach_high_long <- bg_Bach_high %>% pivot_longer(
+bg_Bach_high_long <- bg_Bach_high %>% 
+  pivot_longer(
   cols = -year,
   names_sep = "_",
   names_to = c("edu", "age"),
@@ -329,16 +377,23 @@ bg_Bach_high_long_trim <-
   ))
 
 bg_Bach_high_plot <- bg_Bach_high_long_trim %>% 
-  ggplot(aes(x=year,y=rate, color = age_range)) +
+  ggplot(aes(
+    x=year,
+    y=rate,
+    color = age_range)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  scale_color_viridis(discrete = TRUE, option = "D") +
-  scale_fill_viridis(discrete = TRUE) +
+  geom_smooth(
+    method = "lm",
+    se = FALSE) +
+  scale_color_viridis(
+    discrete = TRUE, option = "D") +
+  scale_fill_viridis(
+    discrete = TRUE) +
   labs(title = "Marriage Trend Amongst Different Age Group Over Time for Men and Women with Bachelor or Higher.", 
        x = "year", 
        y = "Marriage Rate",
        color = "Age Range") +
-  theme_minimal()+
+  theme_minimal() +
   theme(legend.position = "top")
 
 bg_Bach_high_plot
@@ -348,9 +403,10 @@ bg_Bach_high_plot
 
 ```{r}
 write.csv(bg_Bach_high_long_trim,
-          here::here("Final_project", 
-                     "output", 
-                     "Both_Genders_Marriage_Rate_Trimmed_for_BA_and_higher_output.csv"))
+          here::here(
+            "Final_project", 
+            "output", 
+            "Both_Genders_Marriage_Rate_Trimmed_for_BA_and_higher_output.csv"))
 ```
 
 > Now, let's observe the trend differences in marriage rate between individuals with only a high school diploma versus individuals with a Bachelor or higher.
@@ -360,8 +416,12 @@ comparative_data_for_marriage_hsBa <- bg_plot + bg_Bach_high_plot
 
 comparative_data_for_marriage_hsBa
 
-ggsave(here::here("Final_project", "output", "figure",
-                  "Comparative Data for different age group throughout education level.svg"),
+ggsave(
+  here::here(
+    "Final_project",
+    "output",
+    "figure",
+    "Comparative Data for different age group throughout education level.svg"),
        comparative_data_for_marriage_hsBa,
        height = 25,
        width = 25)
@@ -380,15 +440,20 @@ Divorce_sum <- Major_data %>%
                 min = ~ min(.x, na.rm = TRUE),
                 max = ~ max(.x, na.rm = TRUE))))
 Divorce_sum
-write.csv(Divorce_sum,
-          here::here("Final_project", "output", "Divorce_sum.csv"))
+write.csv(
+  Divorce_sum,
+          here::here(
+            "Final_project",
+            "output",
+            "Divorce_sum.csv"))
 ```
 
 ```{r}
 div <- Major_data %>%
   select(year, starts_with("HS_")) 
 
-div_long <- div %>% pivot_longer(
+div_long <- div %>% 
+  pivot_longer(
   cols = -year,
   names_sep = "_",
   names_to = c("edu", "age"),
@@ -415,16 +480,52 @@ div_plot <- div_long_trim %>%
   theme(legend.position = "bottom")
 
 div_plot
+
+ggsave(
+  here::here(
+    "Final_project", 
+    "output", 
+    "figure",
+    "Divorce Rate Trend Graph for Individuals possessing a high school diploma or  less.svg"),
+       div_plot,
+       height = 10,
+       width = 10)
+```
+
+> As observed, the divorce trend is significantly different from the marriage trend with the difference being the rate is much higher in divorce than in marriage. Furthermore, the trend is growing even more starting from the early 2000s.
+
+```{r}
+write.csv(
+  div_long_trim,
+          here::here(
+            "Final_project",
+            "output",
+            "Divorce_Rate_Trimmed_for_HS_output.csv"))
 ```
 
 ```{r}
-Divorce_trend_output <- Major_data %>%
-  select(year, date, BAp_3544) %>% 
-  group_by(year) %>%
-  filter(BAp_3544 == max(BAp_3544))
+Max_Divorce_trend_output <- Major_data %>%
+  select(
+    year,
+    date,
+    BAp_3544) %>% 
+  group_by(
+    year
+    ) %>%
+  filter(
+    BAp_3544 == max(
+      BAp_3544))
+
+
 Divorce_trend_output
-write.csv(Divorce_trend_output,
-          here::here("Final_project", "output", "Divorce_trend_output.csv"))
+
+
+write.csv(
+  Max_Divorce_trend_output,
+          here::here(
+            "Final_project", 
+            "output", 
+            "Max_Divorce_trend_output.csv"))
 ```
 
 > As indicated within the data for population that are 35 to 44 years of age, and has a college degree or higher, the trend for divorce rate seems to be increasing by the years when looking at their highest divorce rate for the years (slightly decreasing starting to see significant decreasing in the early 2000s).
@@ -432,47 +533,61 @@ write.csv(Divorce_trend_output,
 > Now, let's look at additional graphs for the marriage rate versus divorce rate.
 
 
-### Accumulative Comparative Graph for Divorce Rate vs 
+### Accumulative Comparative Graph for Divorce Rate vs Marriage Rate.
 
-> I first had to extract out the exact data I want to look at from the divorce dataset and compare it with the marriage one.
-
-```{r}
-Divorce_BAp_3544_Data1 <- Major_data %>% 
-  mutate(Divorce_BAp_3544 = BAp_3544) %>% 
-  select(Divorce_BAp_3544)
-Divorce_BAp_3544_Data1
-```
-
-```{r}
-Marriage_BAp_3544_Data1 <- both_gender %>% 
-  mutate(Marriage_BAp_3544 = BAp_3544) %>% 
-  select(Marriage_BAp_3544)
-Marriage_BAp_3544_Data1
-```
-
-> I then combined both of them together to make the graph.
+> I combined both of them together to make the graph.
 
 
 ```{r}
 div_to_comb <- Major_data %>%
-  select(year, starts_with(c("HS_", "BAo_", "BAp_")))
+  select(
+    year, 
+    starts_with(c(
+      "HS_", 
+      "BAo_", 
+      "BAp_")))
 
 bg_comb <- both_gender %>%
-  select(year, starts_with(c("HS_", "BAo_", "BAp_")))
+  select(
+    year, 
+    starts_with(c(
+      "HS_", 
+      "BAo_", 
+      "BAp_")))
 
-Joined_data_for_M_D <- full_join(div_to_comb, bg_comb, by = "year", suffix = c("_Marriage", "_Divorce")) 
+Joined_data_for_M_D <- full_join(
+  div_to_comb,
+  bg_comb, 
+  by = "year", 
+  suffix = c(
+    "_Marriage", 
+    "_Divorce"))
+
 Joined_data_for_M_D_trim <- Joined_data_for_M_D %>% 
-  select("year", "HS_3544_Marriage", "HS_3544_Divorce", "HS_4554_Marriage", "HS_4554_Divorce", "BAo_3544_Marriage", "BAo_3544_Divorce", "BAo_4554_Marriage", "BAo_4554_Divorce", "BAp_3544_Marriage", "BAp_3544_Divorce", "BAp_4554_Marriage", "BAp_4554_Divorce")
+  select(
+    "year",
+    "HS_3544_Marriage",
+    "HS_3544_Divorce",
+    "HS_4554_Marriage",
+    "HS_4554_Divorce",
+    "BAo_3544_Marriage",
+    "BAo_3544_Divorce",
+    "BAo_4554_Marriage",
+    "BAo_4554_Divorce",
+    "BAp_3544_Marriage",
+    "BAp_3544_Divorce",
+    "BAp_4554_Marriage",
+    "BAp_4554_Divorce")
 ```
 
 ```{r}
-Joined_data_for_M_D_trim %>% 
+Rainfall_graph_for_marriage_and_divorce <- Joined_data_for_M_D_trim %>% 
   ggplot +
   aes(
-    x = Marriage_BAp_3544,
-    y = Divorce_BAp_3544,
-    fill = Divorce_BAp_3544,
-    color = Divorce_BAp_3544
+    x = BAp_3544_Marriage,
+    y = BAp_3544_Divorce,
+    fill = BAp_3544_Divorce,
+    color = BAp_3544_Divorce
   ) +
   geom_jitter(
     alpha = .5,
@@ -492,18 +607,25 @@ Joined_data_for_M_D_trim %>%
     position = position_nudge(y = .2)
   ) +
   theme_classic() +
-  labs(title = "Comparative Data",
+  labs(
+    title = "Comparative Data",
        y = NULL,
        x = "BAp_3544"
        ) +
   theme(plot.title.position = "plot") +
-  guides(color = guide_none(), fill = guide_none())
+  guides(color = guide_none(), 
+         fill = guide_none())
+
 Rainfall_graph_for_marriage_and_divorce
 ```
 
 ```{r}
-ggsave(here::here("Final_project", "output", "figure",
-                  "Rainfall_graph_for_marriage_and_divorce.svg"),
+ggsave(
+  here::here(
+    "Final_project", 
+    "output", 
+    "figure",
+    "Rainfall_graph_for_marriage_and_divorce.svg"),
        Rainfall_graph_for_marriage_and_divorce,
        height = 6,
        width = 6)
