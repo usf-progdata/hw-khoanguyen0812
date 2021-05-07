@@ -2,9 +2,10 @@
 title: "Final_Proj"
 author: "Khoa Nguyen"
 date: "3/9/2021"
-output:  
-  html_document: default
+output:
+  pdf_document: default
   gitub_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -92,7 +93,7 @@ m_long <- m %>%
 )
 
 m_long_trim <- 
-  bg_long %>% 
+  m_long %>% 
   mutate(
     age_range = case_when(
     age == "2534" ~ "25 to 34",
@@ -138,7 +139,7 @@ w_long <- w %>% pivot_longer(
 )
 
 w_long_trim <- 
-  bg_long %>% 
+  w_long %>% 
   mutate(age_range = case_when(
     age == "2534" ~ "25 to 34",
     age == "3544" ~ "35 to 44",
@@ -324,7 +325,7 @@ ggsave(
 > We are going to transform the "Both gender" dataset into a Tibble here and save everytihng.
 
 ```{r}
-tibble_both_gender <- as.tibble(
+tibble_both_gender <- as_tibble(
   both_gender)
 
 
@@ -693,58 +694,8 @@ Joined_data_for_M_D_trim <- Joined_data_for_M_D %>%
     "BAp_4554_Divorce")
 ```
 
-```{r}
-Rainfall_graph_for_marriage_and_divorce <- Joined_data_for_M_D_trim %>% 
-  ggplot +
-  aes(
-    x = BAp_3544_Marriage,
-    y = BAp_3544_Divorce,
-    fill = BAp_3544_Divorce,
-    color = BAp_3544_Divorce
-  ) +
-  geom_jitter(
-    alpha = .5,
-    height = .2,
-    width = .0,
-    na.rm = TRUE
-  ) +
-  geom_boxplot(
-    width = .1,
-    color = "Black",
-    fill = "transparent"
-  ) +
-  ggdist::stat_sample_slabinterval(
-    alpha = .5,
-    height = .2,
-    color = "black",
-    position = position_nudge(y = .2)
-  ) +
-  theme_classic() +
-  labs(
-    title = "Comparative Data",
-       y = NULL,
-       x = "BAp_3544"
-       ) +
-  theme(plot.title.position = "plot") +
-  guides(color = guide_none(), 
-         fill = guide_none())
 
-Rainfall_graph_for_marriage_and_divorce
-```
-
-```{r}
-ggsave(
-  here::here(
-    "Final_project", 
-    "output", 
-    "figure",
-    "Rainfall_graph_for_marriage_and_divorce.svg"),
-       Rainfall_graph_for_marriage_and_divorce,
-       height = 6,
-       width = 6)
-```
-
-> Oh god. This is an abomination. Okay, nothing to see here. Let's stick to regular graphs.
+> Oh god. This is an abomination. Okay, nothing to see here. I removed the graph since It was not graphing properly (it was for comedic and practice purposes) Let's stick to regular graphs.
 
 > Overall, the follow-up data indicates that the divorce trend is out-growing the marriage trend. This observed effect needs to be investigated more in order to rectify the absurdly high divorce rate here in the States within the past couple of decates.
 
