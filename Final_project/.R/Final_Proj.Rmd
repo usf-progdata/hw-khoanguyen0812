@@ -250,6 +250,7 @@ write.csv(both_gend_tab,
 
 > Hm, this looks really wrong. I am not supposed to get a correlation of anything higher than .7 realistically speaking. But, the correlation I provided is my attempt at trying to figure out whether age has any correlation with marriage rate for both genders for individuals who have a high school diploma or less. The data (which is extremely flawed and I need to find a way to update, fix this) indicated there is a strong correlation between age and marriage rate for individuals with a high school diploma or less throughout the years.
 
+### Both-Gender Dataset Comparison With the Individual Gender Dataset.
 > Now, we will look at the dataset for both gender and observe their marriage trend for individuals with only a high school diploma or less. To check our two previous datasets and see if the provided combined dataset of both gender matches with our previous one.
 
 ```{r}
