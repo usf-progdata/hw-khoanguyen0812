@@ -3,9 +3,11 @@ title: "Final_Proj"
 author: "Khoa Nguyen"
 date: "3/9/2021"
 output:
+  html_document:
+    theme: paper
+  word_document: default
   pdf_document: default
   gitub_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
