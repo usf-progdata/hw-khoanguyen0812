@@ -3,9 +3,11 @@ title: "Final_Proj"
 author: "Khoa Nguyen"
 date: "3/9/2021"
 output:
+  html_document:
+    theme: paper
+  word_document: default
   pdf_document: default
   gitub_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -325,7 +327,7 @@ ggsave(
 > We are going to transform the "Both gender" dataset into a Tibble here and save everytihng.
 
 ```{r}
-tibble_both_gender <- as.tibble(
+tibble_both_gender <- as_tibble(
   both_gender)
 
 
